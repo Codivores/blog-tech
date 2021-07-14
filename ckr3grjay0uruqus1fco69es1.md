@@ -1,0 +1,3 @@
+## Laravel - Health Check
+
+undefined
