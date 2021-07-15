@@ -90,3 +90,10 @@ And here comes Vite that seems to provide faster development experience with Hot
 > Git : [https://github.com/tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss)
 
 Tailwind is a utility-first CSS framework. There are Pros and Cons and we will not be arguing that here. We use it for many years now, it continues to improve (responsive, dark mode, small size production builds purging unused CSS with [PostCSS](https://postcss.org)), so why change!
+
+
+---
+
+> We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind) 
+
+%[https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind]
