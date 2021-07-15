@@ -18,7 +18,7 @@ That will create the base structure of the project, install all the dependencies
 ### Dependencies installation
 
 Inertia comes as a Laravel package that can be installed via Composer. 
-You can read the official setup on the [official documentation](https://inertiajs.com/server-side-setup) 
+You can refer to the official setup on the [official documentation](https://inertiajs.com/server-side-setup) 
 
 ```
 composer require inertiajs/inertia-laravel
@@ -28,13 +28,13 @@ composer require inertiajs/inertia-laravel
 
 In order to have Inertia intercept the application requests and do its magic (shared data, assets versioning), we need to add a middleware.
 
-This can be done executing an artisan command which will publish the `HandleInertiaRequests` middleware in your middleware folder `/app/HTTP/Middleware`.
+This can be done executing an artisan command which will publish the `HandleInertiaRequests` middleware in our middleware folder `/app/HTTP/Middleware`.
 
 ```
 php artisan inertia:middleware
 ```
 
-Once created, you need to register it manually in your `/app/Http/Kernel.php` file, in the last position of your web route middleware groups.
+Once created, we need to register it manually in our `/app/Http/Kernel.php` file, in the last position of our web route middleware groups.
 
 ```
     /**
