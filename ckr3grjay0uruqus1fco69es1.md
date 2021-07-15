@@ -2,11 +2,11 @@
 
 Ce n'est pas une surprise, il existe de nombreux packages Laravel permettant de contrôler la santé de votre application : accès à la base de données, écriture dans des dossiers de stockage, validité du certificat SSL, services Mail, Redis, ... et qui peuvent être étendus pour créer des contrôles spécifiques à votre application.
 
-Mais pour de très petits projets, avec peu de fonctionnalités, ces packages nous semblent légèrement surdimensionnés (toujours un peu de scrupules à installer un package pour n'en utiliser qu'une petite partie).
+Mais pour des petits projets avec peu de fonctionnalités, ces packages nous semblent légèrement surdimensionnés (toujours un peu de scrupules à installer un package pour n'en utiliser qu'une infime partie).
 
 ## Ok, vous faîtes quoi alors pour les petits projets ?
 
-Pour ceux-là, nous utilisons généralement un simple contrôleur Laravel qui va vérifier l'accès à la base de données et l'écriture dans le dossier de stockage de l'application.
+Pour ceux-là, nous utilisons généralement un simple contrôleur Laravel qui va vérifier que l'accès à la base de données fonctionne et que l'écriture dans un dossier de stockage de l'application est possible.
 
 
 **/app/Http/Controllers/HealthcheckController.php**
@@ -88,7 +88,7 @@ class HealthcheckController extends Controller
 }
 ``` 
 
-> Les erreurs sont traitées par le logger par défaut de Laravel (classiquement log fichier) et aucune erreur n'est renvoyée par le contrôleur, simplement un code HTTP 500 au lieu de 200. Si vous souhaitez que le contrôleur affiche les erreurs, passez le booléen `$displayError` à `true`.
+> Les erreurs sont traitées par le logger par défaut de Laravel (par défaut, écriture dans le fichier `laravel...log`) et aucune information d'erreur n'est renvoyée par le contrôleur, simplement un code HTTP 500 au lieu de 200. Si vous souhaitez que le contrôleur affiche les erreurs, passez le booléen `$displayError` à `true`.
 
 Pour rendre le contrôleur accessible (*https://monsite.com/healthcheck*), pensez à ajouter la route Web associée (l'appel à la fonction `name` est facultatif) :
 
@@ -102,7 +102,7 @@ Route::get('/healthcheck', [HealthcheckController::class, 'check'])->name('healt
 
 ## Et maintenant, vous en faîtes quoi de votre Health Check ?
 
-Avoir une URL accessible sur son application c'est bien, mais à moins que vous n'ayez envie de passer votre temps devant votre navigateur à rafraîchir la page ou de développer un script d'appel de l'URL qui va ensuite vous notifier, il existe là aussi de nombreuses solutions qui peuvent s'en charger pour vous :
+Avoir une URL accessible sur son application c'est bien, mais à moins que vous n'ayez envie de passer votre temps devant votre navigateur à rafraîchir la page ou de développer un script d'appel de l'URL qui va ensuite vous notifier par le moyen de votre choix, il existe là aussi de nombreuses solutions qui peuvent s'en charger pour vous :
 
 - Configuration d'une URL de Health Check qui va être appelée à intervalle régulier. D'autres types qu'un appel HTTP sont généralement possibles : API, DNS, ping, réponse sur un port donné, test sur le contenu de la réponse, …
 - Notification en cas de problème : e-mail, SMS, notification Push, Slack, Twitter, Webhooks, …
