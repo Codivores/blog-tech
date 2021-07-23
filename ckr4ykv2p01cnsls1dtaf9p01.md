@@ -18,7 +18,7 @@ That will create the base structure of the project, install all the dependencies
 ### Dependencies installation
 
 Inertia comes as a Laravel package that can be installed via Composer. 
-You can refer to the official setup on the [official documentation](https://inertiajs.com/server-side-setup) 
+You can refer to the official setup on the [official documentation](https://inertiajs.com/server-side-setup).
 
 ```
 composer require inertiajs/inertia-laravel
