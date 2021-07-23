@@ -4,7 +4,7 @@ Now it is time to:
 
 - Install our front-end tools
 - Create needed configuration files
-- Create a root view for the application
+- Create a root template
 - Build and display our first Page
 
 ## Dependencies installation
@@ -46,7 +46,7 @@ We need a TypeScript file to boot our Inertia application, so let's create `app.
 
 You can refer to the [official documentation](https://inertiajs.com/client-side-setup) for more details.
 
-For a smooth start, we will just create and mount a basic Vue / Inertia app:
+For easy start, we will just create and mount a basic Vue / Inertia app:
 
 ```
 import { createApp, h } from "vue"
@@ -78,7 +78,7 @@ createApp({
 
 ## Vite configuration
 
-Here is the touchy part as we are discovring Vite, so take it as a draft that should be improved later on.
+Here is the tricky part as we are discovering Vite, so take it as a draft that should be improved later on.
 
 So, let's create a `vite.config.ts` in our project root folder:
 
@@ -128,13 +128,13 @@ export default defineConfig(({ command }: ConfigEnv) => {
 - Import Vite and its Vue 3 SFC plugin
 - Define the configuration ([Official Documentation](https://vitejs.dev/config))
   - `base`: web base path, according to the Vite command that tells us in which environment (development / production) we are:
-    - production (`command === 'build'`): look for `dist` folder (in our `/public` folder) - you can name it like you want and adapt the other places it is used
+    - production (`command === 'build'`): look for `dist` folder (in our `/public` folder) - you can name it like you want and adapt the other scripts it is used
     - development: empty string as we use Vite server
   - `publicDir`: folder used to serve static assets, we won't use it for now
   - `build`: options when we build for production environment
-    - `manifest`: generate a `manifest.json` that contains the information of the files we will need to include in our application with their hashed version
+    - `manifest`: generate a `manifest.json` that contains the information of the files (JS, CSS) needed in our application with their hashed version
     - `outDir`: by default, Vite will empty the output folder on build, so we use a subfolder of the `/public` Laravel folder
-    - `rollupOptions`: here we define the entry point of our application (it uses [Rollup.js](https://rollupjs.org/guide/en/#big-list-of-options) that offers many options)
+    - `rollupOptions`: here we define the entry point of our application that will recursively call all our files (it uses [Rollup.js](https://rollupjs.org/guide/en/#big-list-of-options) that offers many options)
   - `server`:
     - `strictPort`: set to `true` to exit if port is already being used
     - `port`: set the port you want for your Vite server, it will be used later
@@ -183,7 +183,7 @@ We create a `tsconfig.json` in our project root folder:
 
 ## Scripts definition
 
-All the configuration is set, we now need to define our vite scripts in our `package.json`
+All the configuration is set, we now need to define our Vite scripts in our `package.json`
 
 ```
     "scripts": {
@@ -217,7 +217,7 @@ yarn build
 
 ## Root View set up
 
-To include Inertia and load our assets on the first page visit, we need a root view Blade file. 
+To integrate Inertia and load our assets on the first page visit, we need a standard view Blade file. 
 So we create `app.blade.php` in `/resources/views/` folder (you can use and rename the default `welcome.blade.php`).
 
 > `app.blade.php` is the default view used by Inertia, you can change it in the Inertia Middleware or call `Inertia::setRootView()` in your code.
