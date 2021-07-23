@@ -4,7 +4,7 @@ Now it is time to:
 
 - Install our front-end tools
 - Create needed configuration files
-- Create a root template
+- Create a root view for the application
 - Build and display our first Page
 
 ## Dependencies installation
@@ -46,7 +46,7 @@ We need a TypeScript file to boot our Inertia application, so let's create `app.
 
 You can refer to the [official documentation](https://inertiajs.com/client-side-setup) for more details.
 
-For easy start, we will just create and mount a basic Vue / Inertia app:
+For a smooth start, we will just create and mount a basic Vue / Inertia app:
 
 ```
 import { createApp, h } from "vue"
