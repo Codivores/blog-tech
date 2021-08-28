@@ -90,7 +90,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig(({ command }: ConfigEnv) => {
   return {
     base: command === 'build' ? '/dist/' : '',
-    publicDir: "disable",
+    publicDir: false,
     build: {
       manifest: true,
       outDir: "public/dist",
