@@ -20,8 +20,6 @@ In this article, we will see
 
 Twill comes as a Laravel package that can be installed via Composer. You can refer to the [official documentation](https://twill.io/docs/#installation) for more information.
 
-> Currently, if you use PHP 8, there is a conflict with Guzzle library versions, so you need to add `--with-all-dependencies` to the command.
-
 ```
 composer require area17/twill:"^2.0"
 ```
