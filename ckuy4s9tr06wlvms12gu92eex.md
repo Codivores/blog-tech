@@ -15,7 +15,7 @@ Here are the steps to have a running and managed server:
 - [Laravel Forge](#laravel-forge)
   - [Create the Server](#create-the-server)
   - [Provision it](#provision-it)
-- [\o/](#o)
+- [🙌](#8jzja)
 
 ## Infomaniak Public Cloud
 
@@ -197,7 +197,7 @@ If you go back to Laravel Forge and look at your Server, you should now see it b
 
 ![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634548168277/VquJuKSmM.png)
 
-## \o/
+## 🙌
 
 Here you are, the Instance is running, installed, configured, managed and the default Laravel Forge site is deployed, you can open a browser and go to your Instance IP address to confirm
 
