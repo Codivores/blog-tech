@@ -30,7 +30,8 @@ yarn add @inertiajs/inertia @inertiajs/inertia-vue3
 yarn add vue@next
 
 # Tools for authoring Single File Components (SFCs) (with PostCSS as a dependency)
-yarn add @vue/compiler-sfc --dev
+# Note: as of 3.2.13+, this package is included as a dependency of the main vue package 
+# yarn add @vue/compiler-sfc --dev
 
 # Vite and its Vue 3 SFC plugin
 yarn add vite @vitejs/plugin-vue --dev
@@ -316,6 +317,20 @@ export default defineComponent({
 })
 </script>
 ```
+
+Or with the SFC `<script setup>` (compile-time syntactic sugar for using Composition API inside Single File Components: https://v3.vuejs.org/api/sfc-script-setup.html)
+```
+<script setup lang="ts">
+console.log("Page - Index");
+</script>
+
+<template>
+  <div>
+    <h1>Welcome</h1>
+  </div>
+</template>
+```
+
 
 ### RUUUUUUN
 
