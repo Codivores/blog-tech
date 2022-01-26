@@ -32,7 +32,7 @@ module.exports = {
 }
 ```
 
-### Tailwind configuration
+### Tailwind 2 Configuration
 
 Let's create a `tailwind.config.js` in our project root folder with default configuration except for the `mode` and `purge` options.
 
@@ -73,6 +73,24 @@ and with JIT activated
 
 
 ![Tailwind with JIT](https://cdn.hashnode.com/res/hashnode/image/upload/v1626377625064/1AWXjcTKi.png)
+
+### Tailwind 3 Configuration
+
+The JIT compiler is now enabled by default and the `purge` option has been replaced by `content`.
+
+**/tailwind.config.js**
+```
+module.exports = {
+  content: [
+    './resources/**/*.blade.php',
+    './resources/**/*.vue',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
 
 ## Integration in our application
 
