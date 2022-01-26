@@ -1,9 +1,11 @@
 ## Give some style with Tailwind
 
 In this article, we will
-- [Install and configure Tailwind](#installation-and-configuration)
-- [Integrate it in our application](#integration-in-our-application)
-- [Play with Inertia and a basic Tailwind component](#time-to-play)
+- [Install and configure Tailwind](#heading-installation-and-configuration)
+  - [Tailwind 2](#heading-tailwind-2-configuration)
+  - [Tailwind 3](#heading-tailwind-3-configuration)
+- [Integrate it in our application](#heading-integration-in-our-application)
+- [Play with Inertia and a basic Tailwind component](#heading-time-to-play)
 
 ## Installation and configuration
 
@@ -30,9 +32,9 @@ module.exports = {
 }
 ```
 
-### Tailwind 2 Configuration
+### Tailwind configuration
 
-Let's create (or edit) a `tailwind.config.js` in our project root folder with default configuration except for the `mode` and `purge` options.
+Let's create a `tailwind.config.js` in our project root folder with default configuration except for the `mode` and `purge` options.
 
 **/tailwind.config.js**
 ```
@@ -51,6 +53,7 @@ module.exports = {
     },
     plugins: [],
   }
+
 ```
 
 ** What it does**
@@ -70,24 +73,6 @@ and with JIT activated
 
 
 ![Tailwind with JIT](https://cdn.hashnode.com/res/hashnode/image/upload/v1626377625064/1AWXjcTKi.png)
-
-### Tailwind 3 Configuration
-
-The JIT mode is now enabled by default and the `purge` option has been replaced by `content`
-
-**/tailwind.config.js**
-```
-module.exports = {
-  content: [
-    './resources/**/*.blade.php',
-    './resources/**/*.vue',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-```
 
 ## Integration in our application
 
