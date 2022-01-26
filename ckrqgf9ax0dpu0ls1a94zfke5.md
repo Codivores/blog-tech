@@ -20,8 +20,6 @@ yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
 
 Let's create a `postcss.config.js` in our project root folder with default configuration.
 
-> Now, you can run the command `npx tailwindcss init -p` which will create the `postcss.config.js` and `tailwind.config.js` files
-
 **/postcss.config.js**
 ```
 module.exports = {
@@ -32,9 +30,9 @@ module.exports = {
 }
 ```
 
-### Tailwind configuration
+### Tailwind 2 Configuration
 
-Let's create a `tailwind.config.js` in our project root folder with default configuration except for the `mode` and `purge` options.
+Let's create (or edit) a `tailwind.config.js` in our project root folder with default configuration except for the `mode` and `purge` options.
 
 **/tailwind.config.js**
 ```
@@ -53,7 +51,6 @@ module.exports = {
     },
     plugins: [],
   }
-
 ```
 
 ** What it does**
@@ -73,6 +70,24 @@ and with JIT activated
 
 
 ![Tailwind with JIT](https://cdn.hashnode.com/res/hashnode/image/upload/v1626377625064/1AWXjcTKi.png)
+
+### Tailwind 3 Configuration
+
+The JIT mode is now enabled by default and the `purge` option has been replaced by `content`
+
+**/tailwind.config.js**
+```
+module.exports = {
+  content: [
+    './resources/**/*.blade.php',
+    './resources/**/*.vue',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
 
 ## Integration in our application
 
