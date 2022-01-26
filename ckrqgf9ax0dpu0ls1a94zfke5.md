@@ -114,7 +114,6 @@ Then we import it in our TypeScript application file.
 ```
 import { createApp, h } from "vue"
 import { App, plugin as inertiaPlugin } from "@inertiajs/inertia-vue3"
-import "vite/dynamic-import-polyfill"
 
 import '../css/app.css'
 
