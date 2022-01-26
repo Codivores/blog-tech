@@ -20,6 +20,8 @@ yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
 
 Let's create a `postcss.config.js` in our project root folder with default configuration.
 
+> Now, you can run the command `npx tailwindcss init -p` which will create the `postcss.config.js` and `tailwind.config.js` files
+
 **/postcss.config.js**
 ```
 module.exports = {
