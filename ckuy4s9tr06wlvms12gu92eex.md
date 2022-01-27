@@ -155,7 +155,7 @@ Once saved, the rules are instantly applied. All is done now for the Infomaniak 
 
 On the Server creation section, select **Custom VPS**.
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634547480443/dgH9krk57.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1643301679924/z1oxciKN5.png)
 
 On the form that appears:
 - Select the type of the Server: App Server (including all the softwares needed for a Web application), or you can also split your application in multiple Servers / Instances
@@ -172,7 +172,7 @@ You will now see a modal window where you can find:
 
 > Don't click on Close too quickly and keep those information somewhere secure.
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634547889417/FFfAEECNKxQ.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1643301835894/a9l3oRdz2.png)
 
 For a supported Provider, Laravel Forge runs the script automatically without requiring any further action from you. But with Custom Providers, it is to us to run it manually, so:
 
@@ -193,15 +193,13 @@ bash forge.sh
 
 If you go back to Laravel Forge and look at your Server, you should now see it being prepared.
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634548127094/00zIIcSiB.png)
-
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634548168277/VquJuKSmM.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1643301951903/yMVwyRJoF.png)
 
 ## 🙌
 
 Here you are, the Instance is running, installed, configured, managed and the default Laravel Forge site is deployed, you can open a browser and go to your Instance IP address to confirm
 
-![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634548834148/n8-ZQ366Uu1.png)
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1643302586445/oTObg92qT0.png)
 
 And of course, you can now deploy your PHP application and enjoy the Infomaniak infrastructure and Laravel Forge quick deploy feature!
 
