@@ -37,7 +37,7 @@ Just give your Instance a name (and a description if you want). You don't need t
 
 ![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1634546711651/4Xi_qmHKB.png)
 
-Laravel Forge requires a **Ubuntu 20.04 x64**, so simply add **Ubuntu 20.04 LTS** from the list.
+Laravel Forge requires a **Ubuntu 20.04 x64** or **Ubuntu 22.04 x64**, so simply add **Ubuntu 22.04 LTS** from the list if you want the latest release.
 
 #### Flavor (ressources of the Instance)
 
