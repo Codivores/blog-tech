@@ -10,6 +10,8 @@ tags: laravel, vuejs, tailwind-css, twill
 
 ---
 
+> **Updated version for Laravel 10 / Twill 3 on Apr 13, 2023**
+> 
 > We are not regular writers and even less in english, so please accept our apologies in advance! (and we encourage your feedback)
 
 After some years building Laravel based applications and using more and more Vue.js for the front-end, we are now updating our stack for CMS projects, trying to bring together the best tools and practices to provide the best experience for our clients, our clients' clients and of course us as developers.
