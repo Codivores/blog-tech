@@ -1,29 +1,52 @@
-## Give some style with Tailwind
+---
+title: "Give some style with Tailwind"
+seoTitle: "Tailwind set up with Vite on our Laravel application"
+seoDescription: "Install and configure Tailwind with Vite, make some fun with Inertia on our Laravel application"
+datePublished: Thu Jul 15 2021 20:50:10 GMT+0000 (Coordinated Universal Time)
+cuid: ckrqgf9ax0dpu0ls1a94zfke5
+slug: ltivt-3-tailwind
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1627665023530/e2KqWfCvm.png
+tags: laravel, vuejs, tailwind-css, inertiajs
+
+---
+
+> **Updated version for Laravel 10 / Twill 3 on Apr 14, 2023**
 
 In this article, we will
-- [Install and configure Tailwind](#heading-installation-and-configuration)
-  - [Tailwind 2](#heading-tailwind-2-configuration)
-  - [Tailwind 3](#heading-tailwind-3-configuration)
-- [Integrate it in our application](#heading-integration-in-our-application)
-- [Play with Inertia and a basic Tailwind component](#heading-time-to-play)
+
+* [Install and configure Tailwind](#heading-installation-and-configuration)
+    
+* [Integrate it into our application](#heading-integration-in-our-application)
+    
+* [Play with Inertia and a basic Tailwind component](#heading-time-to-play)
+    
 
 ## Installation and configuration
 
-For this steps, we will mainly follow the [official documentation](https://tailwindcss.com/docs/guides/vue-3-vite).
+For these steps, we will mainly follow the [official documentation](https://tailwindcss.com/docs/installation/using-postcss).
 
 ### Dependencies installation
 
-```
+```bash
 # Tailwind and its dependencies: PostCSS, Autoprefixer
-yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
+yarn add tailwindcss postcss autoprefixer --dev
+```
+
+### Configuration files generation
+
+Let's generate `tailwind.config.js` and `postcss.config.js` files in our project root folder with the default configuration. That can be done manually or with the following command:
+
+```bash
+npx tailwindcss init -p
 ```
 
 ### PostCSS configuration
 
-Let's create a `postcss.config.js` in our project root folder with default configuration.
+Here we keep the default configuration.
 
 **/postcss.config.js**
-```
+
+```javascript
 module.exports = {
   plugins: {
     tailwindcss: {},
@@ -32,54 +55,14 @@ module.exports = {
 }
 ```
 
-### Tailwind 2 Configuration
+### Tailwind Configuration
 
-Let's create a `tailwind.config.js` in our project root folder with default configuration except for the `mode` and `purge` options.
-
-**/tailwind.config.js**
-```
-module.exports = {
-    mode: 'jit',
-    purge: [
-        './resources/**/*.blade.php',
-        './resources/**/*.vue',
-    ],
-    darkMode: false,
-    theme: {
-      extend: {},
-    },
-    variants: {
-      extend: {},
-    },
-    plugins: [],
-  }
-
-```
-
-** What it does**
-
-The `purge` option is where we set the paths of our application files which have HTML classes, so that PostCSS can tree-shake unused styles for production builds (also used if JIT mode is enabled for development builds - explanations in next paragraph):
-- our Blade files (probably just our root view `app.blade.php`)
-- our Vue Pages and Components
-
-The `mode` set to `jit` for Just-in-Time which is a new compiler currently in preview (you can remove this option if you have troubles, we may have an issue where this mode breaks the Vite HMR for `.vue` files - ongoing investigations). It uses your `purge` option configuration in development environment to generate your CSS faster and identically to production build.
-
-You can see the difference without JIT
-
-
-![Tailwind without JIT](https://cdn.hashnode.com/res/hashnode/image/upload/v1626377561392/YFOwPK56S.png)
-
-and with JIT activated
-
-
-![Tailwind with JIT](https://cdn.hashnode.com/res/hashnode/image/upload/v1626377625064/1AWXjcTKi.png)
-
-### Tailwind 3 Configuration
-
-The JIT compiler is now enabled by default and the `purge` option has been replaced by `content`.
+From the default configuration, we add the paths (relative to the project root) to all of your files that can contain Tailwind class names (Blade templates, Vue components, ...)
 
 **/tailwind.config.js**
-```
+
+```javascript
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './resources/**/*.blade.php',
@@ -94,50 +77,37 @@ module.exports = {
 
 ## Integration in our application
 
-- Create a CSS file with Tailwind directives
-- Import it in our application
-- Use it in our root view
+* Create a CSS file with Tailwind directives
+    
+* Import it into our application
+    
+* Use it in our root view
+    
 
-We can use the default `/resources/css/app.css` that comes with Laravel (or feel free to do like you want) and we add the standard Tailwind directives.
+We can use the default `/resources/css/app.css` that comes with Laravel (or feel free to do as you want) and we add the standard Tailwind directives.
 
 **/resources/css/app.css**
-```
+
+```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 ```
 
-Then we import it in our TypeScript application file.
+Then we import it into our TypeScript application file.
 
 **/resources/js/app.ts**
-```
-import { createApp, h } from "vue"
-import { App, plugin as inertiaPlugin } from "@inertiajs/inertia-vue3"
+
+```javascript
+import { createApp, h, type DefineComponent } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 
 import '../css/app.css'
 
-const el = document.getElementById("app")!
+createInertiaApp({
 ...
 ```
-
-In our Root View, we left a commented line that we can now uncomment, to include our CSS for the production build.
-
-**/resources/views/app.blade.php**
-```
-        @production
-            @php
-                $manifest = json_decode(file_get_contents(public_path('dist/manifest.json')), true);
-            @endphp
-            <script type="module" src="/dist/{{ $manifest['resources/js/app.ts']['file'] }}"></script>
-            <link rel="stylesheet" href="/dist/{{ $manifest['resources/js/app.ts']['css'][0] }}">
-        @else
-            <script type="module" src="http://localhost:3030/@vite/client"></script>
-            <script type="module" src="http://localhost:3030/resources/js/app.ts"></script>
-        @endproduction
-```
-
-
 
 ## Time to play
 
@@ -147,105 +117,96 @@ To do so, we will use a simple component taken from [Tailwind UI](https://tailwi
 
 **/resources/js/Pages/Index.vue**
 
-```
+```xml
 <template>
-  <div class="bg-indigo-700">
-    <div class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
-        <span class="block">Boost your productivity.</span>
-        <span class="block">Start using Workflow today.</span>
-      </h2>
-      <p class="mt-4 text-lg leading-6 text-indigo-200">Ac euismod vel sit maecenas id pellentesque eu sed consectetur. Malesuada adipiscing sagittis vel nulla nec.</p>
-      <a href="#" class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto">
-        Sign up for free
-      </a>
+  <div class="bg-white">
+    <div class="relative isolate px-6 pt-14 lg:px-8">
+      <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Data to enrich your online business</h1>
+          <p class="mt-6 text-lg leading-8 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.</p>
+          <div class="mt-10 flex items-center justify-center gap-x-6">
+            <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-``` 
+```
 
-If Vite is started you just have to save and have a look to your browser to see
+If Vite is started you just have to save and have a look at your browser to see
 
-
-![Woaw](https://cdn.hashnode.com/res/hashnode/image/upload/v1626379957289/zZPxiy24S.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681482311289/6620c34b-a8e0-41c3-a8d7-d46322269866.png align="center")
 
 ### Why not add some logic to play around
 
 At this time we have a static Vue application, maybe we could use some data from our Laravel Controller and play with CSS classes.
 
-In our Laravel Controller, we will compute a `darkMode` random boolean that we will use in our Page.
+In our Laravel Controller, we will compute a `darkMode` random boolean that we will use on our Page.
 
 > The Inertia render function takes a second parameter which is an associative array that will be passed as Vue props in our Page.
 
 **/app/Http/Controllers/IndexController.php**
 
-```
+```php
 <?php
 
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function __invoke(): InertiaResponse
     {
         return Inertia::render('Index', [
             'darkMode' => (bool)random_int(0, 1),
         ]);
     }
 }
-``` 
+```
 
-And now in our Page, we register our `darkMode` prop (as a Boolean) in our component props and use it in the first `div` of the template to alternatively set its class to `bg-gray-700` or `bg-indigo-700`.
+And now on our Page, we register our `darkMode` prop (as a Boolean) in our component props and use it in the first `div` of the template to alternatively set its class to `bg-gray-600` or `bg-white`.
 
 **/resources/js/Pages/Index.vue**
 
-```
+```xml
 <script setup lang="ts">
 interface Props {
-    darkMode: boolean;
+  darkMode: boolean
 }
 
-const props = defineProps<Props>();
-
-console.log("Page - Index");
+const props = defineProps<Props>()
 </script>
 
 <template>
-    <div :class="darkMode ? 'bg-gray-700' : 'bg-indigo-700'">
-        <div
-            class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8"
-        >
-            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
-                <span class="block">Boost your productivity.</span>
-                <span class="block">Start using Workflow today.</span>
-            </h2>
-            <p class="mt-4 text-lg leading-6 text-indigo-200">
-                Ac euismod vel sit maecenas id pellentesque eu sed consectetur.
-                Malesuada adipiscing sagittis vel nulla nec.
-            </p>
-            <a
-                href="#"
-                class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto"
-            >
-                Sign up for free
-            </a>
+  <div :class="darkMode ? 'bg-gray-600' : 'bg-white'">
+    <div class="relative isolate px-6 pt-14 lg:px-8">
+      <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Data to enrich your online business</h1>
+          <p class="mt-6 text-lg leading-8 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.</p>
+          <div class="mt-10 flex items-center justify-center gap-x-6">
+            <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
-
-``` 
+```
 
 If we go back to our browser, we can now either see this
 
-
-![indigo mode](https://cdn.hashnode.com/res/hashnode/image/upload/v1626382693663/MdgeUzxNf.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681482716995/51ac8b01-b75a-46ac-ba82-e5b0071f1bf8.png align="center")
 
 or this
 
-
-![gray mode](https://cdn.hashnode.com/res/hashnode/image/upload/v1626382667300/EI195jDxH.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681482758073/2b1294a7-8fbd-49ae-a120-be4f4950ecef.png align="center")
 
 ---
 
@@ -253,6 +214,6 @@ or this
 
 ---
 
-> We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind) 
+> We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind)
 
 %[https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind]
