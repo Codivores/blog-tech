@@ -6,9 +6,11 @@ datePublished: Thu Jul 15 2021 13:35:02 GMT+0000 (Coordinated Universal Time)
 cuid: ckr4ykv2p01cnsls1dtaf9p01
 slug: ltivt-1-laravel-with-inertia
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1627664994987/ZCHKnMW8s.png
-tags: laravel, php
+tags: laravel, php, inertiajs
 
 ---
+
+> **Updated version for Laravel 10 / Twill 3 on Apr 13, 2023**
 
 ## Install Laravel
 
@@ -34,9 +36,9 @@ composer require inertiajs/inertia-laravel
 
 ### Middleware set up
 
-In order to have Inertia intercept the application requests and do its magic (shared data, assets versioning), we need to add a middleware.
+To have Inertia intercept the application requests and do its magic (shared data, assets versioning), we need to add a middleware.
 
-This can be done executing an artisan command which will publish the `HandleInertiaRequests` middleware in our middleware folder `/app/HTTP/Middleware`.
+This can be done by executing an artisan command which will publish the `HandleInertiaRequests` middleware in our middleware folder `/app/HTTP/Middleware`.
 
 ```plaintext
 php artisan inertia:middleware
