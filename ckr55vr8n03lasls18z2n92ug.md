@@ -70,7 +70,7 @@ createInertiaApp({
 })
 ```
 
-\*\* What it does\*\*
+**What it does**
 
 * Import Vue and Inertia packages
     
@@ -114,7 +114,7 @@ export default defineConfig({
 });
 ```
 
-\*\* What it does\*\*
+**What it does**
 
 * Import Vite and its Vue 3 SFC plugin
     
@@ -186,7 +186,7 @@ We create a `tsconfig.json` in our project root folder:
 }
 ```
 
-\*\* What it does\*\*
+**What it does**
 
 * Use default compiler options given by Vue
     
@@ -204,7 +204,7 @@ All the configuration is set, let's have a look at the Vite scripts in our `pack
     },
 ```
 
-\*\* What it does\*\*
+**What it does**
 
 * `dev`: start Vite server
     
@@ -250,7 +250,7 @@ To integrate Inertia and load our assets on the first page visit, we need a stan
 </html>
 ```
 
-\*\* What it does\*\*
+**What it does**
 
 * Add the `@vite()` Blade directive in the `head` to reference our Vite entry point
     
