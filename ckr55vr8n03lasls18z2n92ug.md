@@ -1,6 +1,16 @@
-# Set up Inertia, Vite, Vue3, TypeScript / Build our first Page
+---
+title: "Set up Inertia, Vite, Vue3, TypeScript / Build our first Page"
+seoTitle: "Set up Inertia, Vite, Vue3, TypeScript on our Laravel application"
+seoDescription: "Install the front-end tools: Inertia client side, Vite, Vue 3 with Composition API and TypeScript"
+datePublished: Thu Jul 15 2021 17:03:35 GMT+0000 (Coordinated Universal Time)
+cuid: ckr55vr8n03lasls18z2n92ug
+slug: ltivt-2-inertia-vite-vue3-typescript
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1627665008142/oVypqiw66.png
+tags: laravel, vuejs, typescript, frontend-development, inertiajs
 
-> From version 9 of Laravel, Vite has replaced Laravel Mix, this article is now outdated and need an update. Further information about Vite with Laravel: [https://laravel.com/docs/9.x/vite](https://laravel.com/docs/9.x/vite)
+---
+
+> **Updated version for Laravel 10 / Twill 3 on Apr 14, 2023**
 
 Now it is time to:
 
@@ -15,34 +25,22 @@ Now it is time to:
 
 ## Dependencies installation
 
-Laravel comes with a default `package.json` file in order to build the front-end assets with Laravel Mix and Webpack packages. The aim of our project is to replace Laravel Mix with Vite, so let's clean our `package.json` to the minimal and remove all scripts and dependencies:
+Laravel comes with a default `package.json` file to build the front-end assets and already integrates Vite and the Laravel Vite packages.
 
-```plaintext
-{
-    "private": true
-}
-```
+We can now install all the needed dependencies via [yarn](https://yarnpkg.com), but you can of course use [npm](https://www.npmjs.com) if you prefer.
 
-> You can also delete the `webpack.mix.js` file
-
-We can now install all the dependencies via [yarn](https://yarnpkg.com), but you can of course use [npm](https://www.npmjs.com) if you prefer.
-
-```plaintext
-# Inertia Client Side (with Axios as a dependency) and its Vue 3 plugin
-yarn add @inertiajs/inertia @inertiajs/inertia-vue3
-
+```bash
 # Vue 3
-yarn add vue@next
+yarn add vue
 
-# Tools for authoring Single File Components (SFCs) (with PostCSS as a dependency)
-# Note: as of 3.2.13+, this package is included as a dependency of the main vue package 
-# yarn add @vue/compiler-sfc --dev
-
-# Vite and its Vue 3 SFC plugin
+# Vite plugin Vue
 yarn add vite @vitejs/plugin-vue --dev
 
-# TypeScript and its Vue plugin
-yarn add typescript @vuedx/typescript-plugin-vue --dev
+# TypeScript
+yarn add typescript --dev
+
+# Inertia Vue 3 adapter (with @inertiajs/core and axios as a dependency)
+yarn add @inertiajs/vue3
 ```
 
 ## Inertia configuration
@@ -51,84 +49,69 @@ We need a TypeScript file to boot our Inertia application, so let's create `app.
 
 You can refer to the [official documentation](https://inertiajs.com/client-side-setup) for more details.
 
-For easy start, we will just create and mount a basic Vue / Inertia app:
+For an easy start, we will just create and mount a basic Vue / Inertia app:
 
-```plaintext
-import { createApp, h } from "vue"
-import { App, plugin as inertiaPlugin } from "@inertiajs/inertia-vue3"
-import "vite/dynamic-import-polyfill"
+```javascript
+import { createApp, h, type DefineComponent } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 
-const el = document.getElementById("app")!
+createInertiaApp({
+  resolve: async (name: string) => {
+    let page = await resolvePageComponent(`../views/Pages/${name}.vue`, import.meta.glob<DefineComponent>('../views/Pages/**/*.vue'))
 
-createApp({
-  render: () =>
-    h(App, {
-      initialPage: JSON.parse(el.dataset.page!),
-      resolveComponent: async (name: string) => {
-        const page = (await import(`./Pages/${name}.vue`)).default;
-        return page
-      },
-    }),
+    return page
+  },
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .mount(el)
+  },
 })
-  .use(inertiaPlugin)
-  .mount(el)
 ```
 
 \*\* What it does\*\*
 
-* Import Vue and Inertia packages (and its Vue3 plugin)
+* Import Vue and Inertia packages
     
-* Declare our root HTML element ID
-    
-* Create the application, looking for Pages Vue Components *(that replace standard Laravel Blade files)* in `/resources/js/Pages` when rendering from Laravel Controller
-    
-* Use the Inertia Vue3 plugin
+* Create the application, looking for Pages Vue Components *(that replace standard Laravel Blade files)* in `/views/Pages` when rendering from Laravel Controller
     
 
 ## Vite configuration
 
-Here is the tricky part as we are discovering Vite, so take it as a draft that should be improved later on.
+Laravel comes with a default `vite.config.ts` file in our project root folder with laravel plugin configured that we are going to edit:
 
-So, let's create a `vite.config.ts` in our project root folder:
+```javascript
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
 
-```plaintext
-import { ConfigEnv, defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
-export default defineConfig(({ command }: ConfigEnv) => {
-  return {
-    base: command === 'build' ? '/dist/' : '',
-    publicDir: false,
-    build: {
-      manifest: true,
-      outDir: "public/dist",
-      rollupOptions: {
-        input: {
-          app: "resources/js/app.ts",
-        },
-      },
-    },
-    server: {
-      strictPort: true,
-      port: 3030,
-      // https: true,
-      hmr: {
-        host: "localhost",
-      },
-    },
+export default defineConfig({
     plugins: [
-      vue()
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.ts'],
+            refresh: true,
+        }),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    // The Vue plugin will re-write asset URLs, when referenced
+                    // in Single File Components, to point to the Laravel web
+                    // server. Setting this to `null` allows the Laravel plugin
+                    // to instead re-write asset URLs to point to the Vite
+                    // server instead.
+                    base: null,
+ 
+                    // The Vue plugin will parse absolute URLs and treat them
+                    // as absolute paths to files on disk. Setting this to
+                    // `false` will leave absolute URLs un-touched so they can
+                    // reference assets in the public directory as expected.
+                    includeAbsolute: false,
+                },
+            },
+        }),
     ],
-    optimizeDeps: {
-      include: [
-        "@inertiajs/inertia",
-        "@inertiajs/inertia-vue3",
-        "axios",
-        "vue"
-      ],
-    },
-  }
-})
+});
 ```
 
 \*\* What it does\*\*
@@ -137,65 +120,69 @@ export default defineConfig(({ command }: ConfigEnv) => {
     
 * Define the configuration ([Official Documentation](https://vitejs.dev/config))
     
-    * `base`: web base path, according to the Vite command that tells us in which environment (development / production) we are:
+    * `plugins`:
         
-        * production (`command === 'build'`): look for `dist` folder (in our `/public` folder) - you can name it like you want and adapt the other scripts it is used
+        * `laravel`: adapt the location of the application entry point
             
-        * development: empty string as we use Vite server
+        * `vue`: use the Vite Vue plugin
             
-    * `publicDir`: folder used to serve static assets, we won't use it for now
-        
-    * `build`: options when we build for production environment
-        
-        * `manifest`: generate a `manifest.json` that contains the information of the files (JS, CSS) needed in our application with their hashed version
-            
-        * `outDir`: by default, Vite will empty the output folder on build, so we use a subfolder of the `/public` Laravel folder
-            
-        * `rollupOptions`: here we define the entry point of our application that will recursively call all our files (it uses [Rollup.js](https://rollupjs.org/guide/en/#big-list-of-options) that offers many options)
-            
-    * `server`:
-        
-        * `strictPort`: set to `true` to exit if port is already being used
-            
-        * `port`: set the port you want for your Vite server, it will be used later
-            
-        * `hmr.host`: here we set the `host` for our Hot Module Replacement
-            
-    * `plugins`: use the Vite Vue plugin
-        
-    * `optimizeDeps.include`: force a linked package to be pre-bundled *(not sure if necessary for axios and vue packages)*
-        
 
 ## TypeScript configuration
 
 We create a `tsconfig.json` in our project root folder:
 
-```plaintext
+```json
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "strict": true,
-        "jsx": "preserve",
-        "sourceMap": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "lib": [
-            "esnext",
-            "dom"
-        ],
-        "plugins": [
-            {
-                "name": "@vuedx/typescript-plugin-vue"
-            }
-        ]
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+
+    // Required in Vue projects
+    "jsx": "preserve",
+
+    // `"noImplicitThis": true` is part of `strict`
+    // Added again here in case some users decide to disable `strict`.
+    // This enables stricter inference for data properties on `this`.
+    "noImplicitThis": true,
+    "strict": true,
+
+    // Required in Vite
+    "isolatedModules": true,
+    // For `<script setup>`
+    // See <https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/#preserve-value-imports>
+    "preserveValueImports": true,
+    // Enforce using `import type` instead of `import` for types
+    "importsNotUsedAsValues": "error",
+
+    // A few notes:
+    // - Vue 3 supports ES2016+
+    // - For Vite, the actual compilation target is determined by the
+    //   `build.target` option in the Vite config.
+    //   So don't change the `target` field here. It has to be
+    //   at least `ES2020` for dynamic `import()`s and `import.meta` to work correctly.
+    // - If you are not using Vite, feel free to override the `target` field.
+    "target": "ESNext",
+
+    // Recommended
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    // See <https://github.com/vuejs/vue-cli/pull/5688>
+    "skipLibCheck": true,
+
+    "types": ["vite/client", "node"],
+  
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["resources/*"]
     },
     "include": [
-        "resources/js/**/*.ts",
-        "resources/js/**/*.d.ts",
-        "resources/js/**/*.vue"
+      "resources/js/**/*.ts",
+      "resources/js/**/*.d.ts",
+      "resources/**/*.vue"
     ]
+  }
 }
 ```
 
@@ -203,16 +190,14 @@ We create a `tsconfig.json` in our project root folder:
 
 * Use default compiler options given by Vue
     
-* Use `@vuedx/typescript-plugin-vue` package to improve TypeScript features for `.vue` files
-    
-* Defines the include folders: all `.ts`, `.d.ts` and `.vue` files in our `resources/js/` folders
+* Defines the include folders: all `.ts`, `.d.ts` and `.vue` files in our `resources` folders
     
 
 ## Scripts definition
 
-All the configuration is set, we now need to define our Vite scripts in our `package.json`
+All the configuration is set, let's have a look at the Vite scripts in our `package.json`
 
-```plaintext
+```json
     "scripts": {
         "dev": "vite",
         "build": "vite build"
@@ -226,23 +211,23 @@ All the configuration is set, we now need to define our Vite scripts in our `pac
 * `build`: build production bundles
     
 
-You can name them like you want (if you rename `build`, you need to change the test on the command variable in the `vite.config.ts` file)
+Of course, you can name them like you want and adapt the scripts according to your build process.
 
 We can now start our development environment:
 
-```plaintext
+```bash
 yarn dev
 ```
 
-![yarn dev](https://cdn.hashnode.com/res/hashnode/image/upload/v1626273103699/ysv5ZFNuK.png align="left")
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681468373313/51926191-6ed1-40e2-9a7d-0a7ed7bc632f.png align="left")
 
 Or build for production:
 
-```plaintext
+```bash
 yarn build
 ```
 
-![yarn build](https://cdn.hashnode.com/res/hashnode/image/upload/v1626363239110/tyREEDVQh.png align="left")
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681468483638/04f0b161-b704-4dcb-bec6-fc1aaf4ba14a.png align="left")
 
 ## Root View set up
 
@@ -250,23 +235,14 @@ To integrate Inertia and load our assets on the first page visit, we need a stan
 
 > `app.blade.php` is the default view used by Inertia, you can change it in the Inertia Middleware or call `Inertia::setRootView()` in your code.
 
-```plaintext
+```xml
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        @production
-            @php
-                $manifest = json_decode(file_get_contents(public_path('dist/manifest.json')), true);
-            @endphp
-            <script type="module" src="/dist/{{ $manifest['resources/js/app.ts']['file'] }}"></script>
-            {{-- <link rel="stylesheet" href="/dist/{{ $manifest['resources/js/app.ts']['css'][0] }}"> --}}
-        @else
-            <script type="module" src="http://localhost:3030/@vite/client"></script>
-            <script type="module" src="http://localhost:3030/resources/js/app.ts"></script>
-        @endproduction
+        @vite('resources/js/app.ts')
+        @inertiaHead
     </head>
     <body>
         @inertia
@@ -276,13 +252,11 @@ To integrate Inertia and load our assets on the first page visit, we need a stan
 
 \*\* What it does\*\*
 
-* To have Vite working in both development and production environments and include the related assets in the `head`, we need some little hack *(to be improved)*:
+* Add the `@vite()` Blade directive in the `head` to reference our Vite entry point
     
-    * Production: read the `manifest.json` file to get our `app.ts` build and versioned file location (same will apply for CSS that we will see later)
-        
-    * Development: include Vite client and call the Vite server to serve our application from the entry point `/resources/js/app.ts` (adapt here the Vite host of HMR and server port)
-        
-* Include the `@inertia` Blade directive in the `body`
+* Add the `@inertiaHead` Blade directive in the `head`
+    
+* Add the `@inertia()` Blade directive in the `body`
     
 
 ## Time to play and display our first Page
@@ -296,20 +270,21 @@ All that remains to do is:
 
 ### Laravel
 
-We will create a simple Controller, its only task is to render the Index Page (that Inertia will resolve in our `/resources/js/app.ts` and that will look for `/resources/js/Pages/Index.vue` file).
+We will create a simple Controller, its only task is to render the Index Page (that Inertia will resolve in our `/resources/js/app.ts` and that will look for `/resources/views/Pages/Index.vue` file).
 
 **/app/Http/Controllers/IndexController.php**
 
-```plaintext
+```php
 <?php
 
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function __invoke(): InertiaResponse
     {
         return Inertia::render('Index');
     }
@@ -318,22 +293,22 @@ class IndexController extends Controller
 
 **/routes/web.php**
 
-```plaintext
+```php
 <?php
 
 use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [IndexController::class, 'index'])->name('index');
+Route::get('/', IndexController::class)->name('index');
 ```
 
 ### Vue
 
-We will start just displaying a welcome message and write something in the console.
+We will start displaying a welcome message and write something in the console.
 
-**/resources/js/Pages/Index.vue**
+**/resources/views/Pages/Index.vue**
 
-```plaintext
+```xml
 <template>
   <div>
     <h1>Welcome</h1>
@@ -341,27 +316,25 @@ We will start just displaying a welcome message and write something in the conso
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   setup() {
-    console.log("Page - Index")
+    console.log('Page - Index')
   },
 })
 </script>
 ```
 
-Or with the SFC `<script setup>` (compile-time syntactic sugar for using Composition API inside Single File Components: https://v3.vuejs.org/api/sfc-script-setup.html)
+Or with the SFC `<script setup>` (compile-time syntactic sugar for using Composition API inside Single File Components: [https://vuejs.org/api/sfc-script-setup.html](https://vuejs.org/api/sfc-script-setup.html))
 
-```plaintext
+```xml
 <script setup lang="ts">
-console.log("Page - Index");
+  console.log('Page - Index')
 </script>
 
 <template>
-  <div>
-    <h1>Welcome</h1>
-  </div>
+  <h1>Welcome</h1>
 </template>
 ```
 
@@ -369,39 +342,27 @@ console.log("Page - Index");
 
 Start Vite
 
-```plaintext
+```bash
 yarn dev
 ```
 
-Go to the web root of your project in a browser (problably `http://localhost`)
+Go to the web root of your project in a browser (probably `http://localhost`)
 
 and...
 
-![TADAAAAAAAAAAA](https://cdn.hashnode.com/res/hashnode/image/upload/v1626364122365/mwQH5-p6m.png align="left")
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681474424942/ae4ba4a4-fd14-43f8-beee-c42fa10ce617.png align="center")
 
 ### And maybe should we validate production build
 
 First we build our assets.
 
-```plaintext
+```bash
 yarn build
-```
-
-To use this files, we need to do a little change to tell Laravel we want to use production assets. To do so, we change the environment in our `.env` from
-
-```plaintext
-APP_ENV=local
-```
-
-to
-
-```plaintext
-APP_ENV=production
 ```
 
 Now refresh your browser and you can see that the production JavaScript files are loaded
 
-![TADADAAAAAAAAA](https://cdn.hashnode.com/res/hashnode/image/upload/v1626376345166/jL5mUy_e8.png align="left")
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681474474730/7a85c63d-9425-4d70-9945-4d2a03e06c3d.png align="center")
 
 ---
 
