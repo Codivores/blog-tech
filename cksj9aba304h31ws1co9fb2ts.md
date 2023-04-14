@@ -10,6 +10,8 @@ tags: laravel, php, cms, twill
 
 ---
 
+> **Updated version for Laravel 10 / Twill 3 in progress**
+
 In this article, we will see
 
 * [Twill installation and configuration](#installation-and-configuration)
