@@ -57,7 +57,7 @@ module.exports = {
 
 ### Tailwind Configuration
 
-From the default configuration, we add the paths (relative to the project root) to all of your files that can contain Tailwind class names (Blade templates, Vue components, ...)
+From the default configuration, we add the paths (relative to the project root) to all of our files that can contain Tailwind class names (Blade templates, Vue components, ...)
 
 **/tailwind.config.js**
 
