@@ -146,7 +146,7 @@ At this time we have a static Vue application, maybe we could use some data from
 
 In our Laravel Controller, we will compute a `darkMode` random boolean that we will use on our Page.
 
-> The Inertia render function takes a second parameter which is an associative array that will be passed as Vue props in our Page.
+> The Inertia render function takes a second parameter which is an associative array that will be passed as Vue props in the Page.
 
 **/app/Http/Controllers/IndexController.php**
 
