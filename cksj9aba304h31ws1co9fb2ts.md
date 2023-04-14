@@ -1,27 +1,46 @@
-## What about building a CMS, let's Twill
+---
+title: "What about building a CMS, let's Twill"
+seoTitle: "Laravel Twill CMS package installation, configuration and basics"
+seoDescription: "Discover Twill, a CMS package for Laravel, get the basic configuration tips and build with us your first content pages"
+datePublished: Thu Aug 19 2021 18:27:05 GMT+0000 (Coordinated Universal Time)
+cuid: cksj9aba304h31ws1co9fb2ts
+slug: ltivt-4-laravel-twill-basics
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1629392987770/Vblh721Vm.png
+tags: laravel, php, cms, twill
+
+---
 
 In this article, we will see
-- [Twill installation and configuration](#installation-and-configuration)
-  - [Dependencies installation](#dependencies-installation)
-  - [Twill installation](#twill-installation)
-  - [URL configuration](#where-is-my-twill)
-  - [Multi-language configuration](#multi-language-configuration)
-- [Creation and customization of a first content module](#ready-to-create-content)
-  - [Content Module creation](#ready-to-create-content)
-  - [Route and menu customization](#route-and-menu-management)
-  - [Model customization](#model-customization)
-  - [Admin Controller customization](#admin-controller-customization)
 
+* [Twill installation and configuration](#installation-and-configuration)
+    
+    * [Dependencies installation](#dependencies-installation)
+        
+    * [Twill installation](#twill-installation)
+        
+    * [URL configuration](#where-is-my-twill)
+        
+    * [Multi-language configuration](#multi-language-configuration)
+        
+* [Creation and customization of a first content module](#ready-to-create-content)
+    
+    * [Content Module creation](#ready-to-create-content)
+        
+    * [Route and menu customization](#route-and-menu-management)
+        
+    * [Model customization](#model-customization)
+        
+    * [Admin Controller customization](#admin-controller-customization)
+        
 
 ## Installation and configuration
 
-
 ### Dependencies installation
 
-Twill comes as a Laravel package that can be installed via Composer. You can refer to the [official documentation](https://twill.io/docs/#installation) for more information.
+Twill comes as a Laravel package that can be installed via Composer. You can refer to the [official documentation](https://twillcms.com/docs/) for more information.
 
-```
-composer require area17/twill:"^2.0"
+```bash
+composer require area17/twill:"^3.0"
 ```
 
 ### Twill installation
@@ -30,41 +49,46 @@ composer require area17/twill:"^2.0"
 
 Twill installation will
 
-- Create configuration files
-  - `twill.php`: global configuration of the package
-  - `twill-navigation.php`: configuration for the administration menu
-  - `translatable.php`: Twill uses [astrotomic/laravel-translatable](https://github.com/Astrotomic/laravel-translatable) package to handle multi-language content
-- Create an `admin.php` route file to declare the routes of our modules
-- Publish the assets of the administration interface (Twill is built with Vue.js)
-- Migrate all the package tables: admin users, settings, medias, blocks, activity logs, ...
-- Prompt for a superadmin account creation (you can create it or new ones later with this command `php artisan twill:superadmin`)
+* Create configuration files
+    
+    * `twill.php`: global configuration of the package
+        
+    * `translatable.php`: Twill uses [astrotomic/laravel-translatable](https://github.com/Astrotomic/laravel-translatable) package to handle multi-language content
+        
+* Create a `twill.php` route file to declare the routes of our modules
+    
+* Publish the assets of the administration interface (Twill is built with Vue.js 2)
+    
+* Migrate all the package tables: admin users, settings, medias, blocks, activity logs, ...
+    
+* Prompt for a superadmin account creation (you can create it or new ones later with this command `php artisan twill:superadmin`)
+    
 
 If you want to change the table names, create the `twill.php` config file before proceeding to the installation to define your custom names.
 
-
 **Default table names**
 
-```
-    'users_table' => 'twill_users',
+```php
+    'blocks_table' => 'twill_blocks',
+    'features_table' => 'twill_features',
+    'fileables_table' => 'twill_fileables',
+    'files_table' => 'twill_files',
+    'mediables_table' => 'twill_mediables',
+    'medias_table' => 'twill_medias',
     'password_resets_table' => 'twill_password_resets',
+    'related_table' => 'twill_related',
+    'settings_table' => 'twill_settings',
+    'tagged_table' => 'twill_tagged',
+    'tags_table' => 'twill_tags',
     'users_oauth_table' => 'twill_users_oauth',
-    'blocks_table' => 'blocks',
-    'features_table' => 'features',
-    'settings_table' => 'settings',
-    'medias_table' => 'medias',
-    'mediables_table' => 'mediables',
-    'files_table' => 'files',
-    'fileables_table' => 'fileables',
-    'related_table' => 'related',
-    'tags_table' => 'tags',
-    'tagged_table' => 'tagged',
-
+    'users_table' => 'twill_users',
 ```
 
-We generally adapt the table names to set `admin` prefix instead of  `twill` for admin users and add `content` prefix for all other tables except the `settings` and `activity_log`tables.
+We generally change the table names to set `admin` prefix instead of `twill` for admin users and add `content` prefix for all other tables.
 
 **/config/twill.php**
-```
+
+```php
 <?php
 
 return [
@@ -74,84 +98,85 @@ return [
     | Twill default tables naming configuration
     |--------------------------------------------------------------------------
     |
-     */
-    'users_table' => 'admin_users',
-    'password_resets_table' => 'admin_password_resets',
-    'users_oauth_table' => 'admin_users_oauth',
+    */
+
     'blocks_table' => 'content_blocks',
     'features_table' => 'content_features',
-    'settings_table' => 'settings',
-    'medias_table' => 'content_medias',
-    'mediables_table' => 'content_mediables',
-    'files_table' => 'content_files',
     'fileables_table' => 'content_fileables',
+    'files_table' => 'content_files',
+    'mediables_table' => 'content_mediables',
+    'medias_table' => 'content_medias',
+    'password_resets_table' => 'admin_password_resets',
     'related_table' => 'content_related',
-    'tags_table' => 'content_tags',
+    'settings_table' => 'content_settings',
     'tagged_table' => 'content_tagged',
+    'tags_table' => 'content_tags',
+    'users_oauth_table' => 'admin_users_oauth',
+    'users_table' => 'admin_users',
 
 ];
 ```
 
 #### Ok, let's do it
 
-We have an email adress *(no mail will be sent)* and a password, we are now ready for the install process, we can now run the following command:
+We have an email address *(no mail will be sent)* and a password, we are now ready for the installation process, and we can now run the following command:
 
-```
+```bash
 php artisan twill:install
 ```
 
 ### Where is my Twill
 
-The administration interface is available by default as a `admin` subdomain of your `APP_URL` environment variable (defined when you installed Laravel in your `/.env` file).
+The administration interface is available by default as an `admin` path of your `APP_URL` environment variable (defined when you installed Laravel in your `/.env` file): `http://localhost/admin`.
 
 Twill allows you to have it available where you want with environment variables:
 
-- For a full dedicated domain: set a `ADMIN_APP_URL` environment variable with the URL (ex: `ADMIN_APP_URL=tech.codivores.com`)
-- As a subdirectory of your main domain: set a `ADMIN_APP_PATH` environment variable with the name of the subdirectory (ex: `ADMIN_APP_PATH=administration`). And also a `ADMIN_APP_URL` environment variable with the same domain as your `APP_URL` if you don't adapt the configuration as we will do in the next lines.
+* For a fully dedicated domain: set a `ADMIN_APP_URL` environment variable with the URL (ex: `ADMIN_APP_URL=tech.codivores.com`)
+    
+* As a path of your main domain: set an `ADMIN_APP_PATH` environment variable with the name of the subdirectory (ex: `ADMIN_APP_PATH=/administration`).
+    
 
-In most cases, we make the administration available as a subdirectory and adapt the Twill configuration file this way (setting the administration URL to the same as the application URL and defining a default administration subdirectory name):
+You can find more configuration options in the [official documentation](https://twillcms.com/docs/getting-started/installation.html#content-admin-path-and-domain) like strict domain handling when using a path.
+
+In most cases, we make the administration available as a path of the main domain. Depending on our clients, we set the `ADMIN_APP_PATH` environment variable in the `.env` file (or as an OS environment variable) with the name they want (and that is not too obvious for an administration interface).
+
+/!\\ Using a path, there's a buggy behavior: if you try to login through `http://localhost/admin/login.php` instead of `http://localhost/admin`, you are logged in but redirected to the `APP_URL`... To prevent this, you can edit the default `auth_login_redirect_path` config:
 
 **/config/twill.php**
-```
+
+```php
 return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Admin URL
+    | Twill Auth related configuration
     |--------------------------------------------------------------------------
     |
-    | This value is the URL of your admin application.
-    |
      */
-    'admin_app_url' => env('ADMIN_APP_URL', env('APP_URL')),
-    'admin_app_path' => env('ADMIN_APP_PATH', 'administration'),
+    'auth_login_redirect_path' => env('ADMIN_APP_PATH', '/admin'),
 
 ];
 ```
 
-Depending on our clients, we set the `ADMIN_APP_PATH` environment variable in the `.env` file (or as an OS environment variable) with the name they want (and that is not too obvious for an administration interface).
+We can now go to `http://localhost/admin` in a browser and see the login page.
 
-We can now go to `http://localhost/administration` in a browser and see the login page.
-
-![Twill login](https://cdn.hashnode.com/res/hashnode/image/upload/v1626389130454/im0ofnt8U.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681485807160/f3df7f2b-397c-419f-87ca-ecd7b14e1e40.png align="center")
 
 Filling the login form with the superadmin email and password we set earlier, we can see a beautiful empty administration interface 🙌.
 
-
-![Twill empty dashboard](https://cdn.hashnode.com/res/hashnode/image/upload/v1626389246375/7nLzzZxatE.png)
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681485842850/7401a84c-f3bf-4345-9e7f-e7ed9a7b04c4.png align="center")
 
 ### Multi-language configuration
 
-Twill allows to you to manage your content in multiple languages and also have the administration in different languages.
+Twill allows you to manage your content in multiple languages and also have the administration in different languages.
 
 #### Multi-language in the Front
 
-Just add your locales in the `locales` array of the [astrotomic/laravel-translatable](https://github.com/Astrotomic/laravel-translatable) package configuration file.
-We will just add French besides the default English locale for the exemple.
+Just add your locales in the `locales` array of the [astrotomic/laravel-translatable](https://github.com/Astrotomic/laravel-translatable) package configuration file. We will just add French beside the default English locale for the tutorial.
 
 **/config/translatable.php**
 
-```
+```php
 <?php
 
 return [
@@ -163,23 +188,23 @@ return [
     |
     | Contains an array with the applications available locales.
     |
-     */
+    */
+
     'locales' => [
         'en',
         'fr',
-    ], 
-``` 
+    ],
+```
 
 #### Multi-language in the Back
 
-Twill handle some locales for the administration interface (at this time: `en, fr, pl, de, nl, pt, zh-Hans, ru` - feel free to contribute and add yours).
+Twill handle some locales for the administration interface (at this time: `en, fr, pl, de, nl, pt, zh-Hans, ru, tr, bs, ar` - feel free to contribute and add yours).
 
-Admin users can choose their language on their profile page, but you can change the default  `en` in the Twill configuration file if you want.
+Admin users can choose their language on their profile page, but you can change the default `en` in the Twill configuration file if you want.
 
 **/config/twill.php**
 
-
-```
+```php
 <?php
 
 return [
@@ -189,90 +214,104 @@ return [
     | Twill app locale
     |--------------------------------------------------------------------------
     |
-     */
-    'locale' => 'fr',
-``` 
+    */
 
+    'locale' => 'fr',
+```
 
 ## Ready to create content?
 
 In Twill terminology, a Module represents all the files needed to manage a content type: Models (with migrations), Repository, Controller, Request and Form view.
 
-A Module can be initiated with the CLI generator, if we look at the [official documentation](https://twill.io/docs/#cli-generator), we see it's an artisan command that take options:
+A Module can be initiated with the CLI generator, if we look at the [official documentation](https://twillcms.com/docs/modules/cli-generator.html), we see it's an artisan command that take options:
 
-```
+```xml
 php artisan twill:module moduleName {options}
 ```
 
-The `moduleName` is the singular name of your content and Twill generates some files with plural name (so avoid `news` as it already ends with a `s` and will broke some functionalities). 
+The `moduleName` is the singular name of your content type and Twill generates some files with plural name (so avoid `news` as it already ends with a `s` and will break some functionalities).
 
 The options are (taken from the [official documentation](https://twill.io/docs/#cli-generator)):
 
+> \--hasBlocks (-B), to use the block editor on your module form
 
->--hasBlocks (-B), to use the block editor on your module form
+> \--hasTranslation (-T), to add content in multiple languages
 
->--hasTranslation (-T), to add content in multiple languages
+> \--hasSlug (-S), to generate slugs based on one or multiple fields in your model
 
->--hasSlug (-S), to generate slugs based on one or multiple fields in your model
+> \--hasMedias (-M), to attach images to your records
 
->--hasMedias (-M), to attach images to your records
+> \--hasFiles (-F), to attach files to your records
 
->--hasFiles (-F), to attach files to your records
+> \--hasPosition (-P), to allow manually reordering of records in the listing screen
 
->--hasPosition (-P), to allow manually reordering of records in the listing screen
+> \--hasRevisions (-R), to allow comparing and restoring past revisions of records  
+> \--hasNesting (-N), to enable nested items in the module listing  
+> \--parentModel=, to generate the route for a nested module. See ( see Nested Module)  
+> \--bladeForm, to generate a Blade form instead of using the new Form builder (more info [here](https://twillcms.com/blog/twill-3-introducing-oop-builders.html))
 
->--hasRevisions(-R), to allow comparing and restoring past revisions of records
-
-Twill is amazing for this as you can choose the features you want to have available for your content, keeping simple content simple. All works with PHP Traits and additional classes, so if you forget an option, you can add it later based on sample codes.
+Twill is amazing for this as you can choose the features you want to have available for your content, keeping simple content simple. All work with PHP Traits and additional classes, so if you forget an option, you can add it later based on sample codes.
 
 ### Let's create our first Module to handle static pages
 
-We will call this Module *page* and we will need Blocks (to have flexible content), Translations, Slugs, Position (to order them in the administration) and Revisions (we will not attach Medias and Files directly but maybe through Blocks):
+We will call this Module *contentPage* and we will need Blocks (to have flexible content), Translations, Slugs, Medias, Position (to order them in the administration) and Revisions (we will not attach Files directly but maybe through Blocks):
 
-```
-php artisan twill:module page -BTSPR
+```bash
+php artisan twill:make:module contentPage -BTSMPR --bladeForm
 ```
 
 The output we can see in our terminal:
 
-```
+```bash
 Migration created successfully! Add some fields!
 Models created successfully! Fill your fillables!
 Repository created successfully! Control all the things!
 Controller created successfully! Define your index/browser/form endpoints options!
 Form request created successfully! Add some validation rules!
-Form view created successfully! Include your form fields using @formField directives!
-Add Route::module('pages'); to your admin routes file.
-Setup a new CMS menu item in config/twill-navigation.php:
+Form view created successfully! You can now include your form fields.
 
-            'pages' => [
-                'title' => 'Pages',
-                'module' => true
-            ]
-        
-Migrate your database.
+ Do you also want to generate the preview file? [no]:
+  [0] no
+  [1] yes
+ > 
+
+The following snippet has been added to routes/twill.php:
+-----
+TwillRoutes::module('contentPages');
+-----
+To add a navigation entry add the following to your AppServiceProvider BOOT method.
+-----
+use A17\Twill\Facades\TwillNavigation;
+use A17\Twill\View\Components\Navigation\NavigationLink;
+TwillNavigation::addLink(
+    NavigationLink::make()->forModule('contentPages')
+);
+-----
+Do not forget to migrate your database after modifying the migrations.
 
 Enjoy.
 ```
 
 It creates the following files in your application:
 
-
-![Twill module files structure](https://cdn.hashnode.com/res/hashnode/image/upload/v1626442730901/9tU6ylOQ9.png)
-
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681487189543/c4372f46-6ea8-4170-8097-b3fdc9d8d954.png align="left")
 
 ### What next
 
-- Add the Routes and menu according to the structure your want
-- Customize the fields of the Model and the form accordingly
-- Customize the admin Controller if needed
+* Add the Routes and menu according to the structure your want
+    
+* Customize the fields of the Model and the form accordingly
+    
+* Customize the admin Controller if needed
+    
 
 #### Route and menu management
 
 As the CLI generator told us, we have to add the module routes in our admin routes files:
 
 **/routes/admin.php**
-```
+
+```xml
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -283,7 +322,8 @@ Route::module('pages');
 and define the navigation in the administration menu:
 
 **/config/twill-navigation.php**
-```
+
+```xml
 <?php
 
 return [
@@ -298,12 +338,13 @@ return [
 
 In order to be able to see our Module administration interface without triggering an error, we need to execute the migration via `php artisan migrate`. We will do it later as we want to customize the attributes of our model, but here is an example of what you will see:
 
-![Twill navigation base](https://cdn.hashnode.com/res/hashnode/image/upload/v1626443677091/IsA4-xP0i.png)
+![Twill navigation base](https://cdn.hashnode.com/res/hashnode/image/upload/v1626443677091/IsA4-xP0i.png align="left")
 
 This configuration add our Module on the global navigation (first level of the menu), but we have to organize our menu, so we will modify this configuration to access to our Module as a primary entry of a global menu `Content` (with Twill, you can have up to 3 levels for your menu):
 
 **/routes/admin.php**
-```
+
+```xml
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -313,9 +354,9 @@ Route::group(['prefix' => 'content'], function () {
 });
 ```
 
-
 **/config/twill-navigation.php**
-```
+
+```xml
 <?php
 
 return [
@@ -339,26 +380,36 @@ return [
 For the route, using standard Laravel routing, we encapsulate our Module routes definition in a group with the `content` prefix. As Twill routes already add `admin` prefix, our Module routes names will start with `admin.content.pages`
 
 For the Twill navigation, we encapsulate our menu definition in a `content` block which has the following attributes:
-- title: the text displayed in the menu
-- route: the route name of the page that will be displayed on click, for now, we want the index of our Module
-- primary_navigation: the list of the submenus
 
-![Twill navigation organized](https://cdn.hashnode.com/res/hashnode/image/upload/v1626446745343/lgnJ_CqGh.png)
+* title: the text displayed in the menu
+    
+* route: the route name of the page that will be displayed on click, for now, we want the index of our Module
+    
+* primary\_navigation: the list of the submenus
+    
+
+![Twill navigation organized](https://cdn.hashnode.com/res/hashnode/image/upload/v1626446745343/lgnJ_CqGh.png align="left")
 
 #### Model customization
 
 The migration, model and form files created by the generator is a template with default fields.
 
 In our case we want:
-- a title that can be translated
-- meta title and description that can be translated
-- the position to order our pages in the listing of the administration interface
-- a block editor for all the content (we will focus on this part in a later article)
+
+* a title that can be translated
+    
+* meta title and description that can be translated
+    
+* the position to order our pages in the listing of the administration interface
+    
+* a block editor for all the content (we will focus on this part in a later article)
+    
 
 Here is what final files look like.
 
-**/database/migration/..._create_pages_table.php**
-```
+**/database/migration/...\_create\_pages\_table.php**
+
+```xml
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -403,18 +454,19 @@ class CreatePagesTables extends Migration
         Schema::dropIfExists('pages');
     }
 }
-``` 
+```
 
 > As the `createDefault...()` functions create the timestamp and soft delete columns, we use an update of the structure to add our columns in a more pleasant order but it's not a requirement, you can define your columns in the create method
 
 We can now run our migration to create the tables for our Module:
 
-```
+```xml
 php artisan migrate
 ```
 
 **/app/Models/Page.php**
-```
+
+```xml
 // ...
     protected $fillable = [
         'published',
@@ -431,12 +483,13 @@ php artisan migrate
         'active',
     ];
 // ...
-``` 
+```
 
 > Twill uses Laravel Eloquent mass assignment, so we need to declare all our attributes in the `fillable` property, and the translatable attributes in the `translatedAttributes` property (it's a common mistake to forget to add our attributes or a new one created after as Twill won't trigger an error when you edit your content, but your value will not be saved)
 
 **/resources/views/admin/pages/form.blade.php**
-```
+
+```xml
 @extends('twill::layouts.form')
 
 @section('contentFields')
@@ -463,7 +516,7 @@ php artisan migrate
         ])
     @endformFieldset
 @stop
-``` 
+```
 
 > In the `contentFields` section, we remove the title and add a `block_editor` field (the `withoutSeparator` option just removes a separator displayed before it on the edit page and the `blocks` option allows to make available a specific list of blocks, otherwise all blocks can be added)
 
@@ -471,12 +524,11 @@ php artisan migrate
 
 Now we can manage our content in the administration interface. Let's click on the *Add new* button to see a modal asking us the title of our page (the permalink aka slug is automatically generated but you can edit it). You can fill the information for each language and also change the publication status of your content or for each language):
 
-![Content creation - Modal](https://cdn.hashnode.com/res/hashnode/image/upload/v1626447569529/q6LdgkTSX.png)
+![Content creation - Modal](https://cdn.hashnode.com/res/hashnode/image/upload/v1626447569529/q6LdgkTSX.png align="left")
 
 And here is the form for editing our content:
 
-![Content creation - Form](https://cdn.hashnode.com/res/hashnode/image/upload/v1626448839004/tU22hf5qy.png)
-
+![Content creation - Form](https://cdn.hashnode.com/res/hashnode/image/upload/v1626448839004/tU22hf5qy.png align="left")
 
 #### Admin Controller customization
 
@@ -485,7 +537,8 @@ Maybe have you seen on the form screenshot an URL under the title. Twill display
 Here is some basic customization:
 
 **/app/Http/Controllers/Admin/PageController.php**
-``` 
+
+```xml
 <?php
 
 namespace App\Http\Controllers\Admin;
@@ -509,7 +562,7 @@ class PageController extends ModuleController
         ],
     ];
 }
-``` 
+```
 
 > We add an empty `permalinkBase` property to tell Twill our pages will be availble directly under the Web root path.
 
@@ -523,8 +576,6 @@ class PageController extends ModuleController
 
 ---
 
-> We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind) 
+> We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind)
 
 %[https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind]
-
-
