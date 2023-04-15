@@ -12,18 +12,7 @@ tags: laravel, vuejs, typescript, frontend-development, inertiajs
 
 > **Updated version for Laravel 10 / Twill 3 on Apr 14, 2023**
 
-Now it is time to:
-
-* [Install our front-end tools](#dependencies-installation)
-    
-* [Create needed configuration files](#inertia-configuration)
-    
-* [Create a root template](#root-view-set-up)
-    
-* [Build and display our first Page](#time-to-play-and-display-our-first-page)
-    
-
-## Dependencies installation
+## Front-end tools installation
 
 Laravel comes with a default `package.json` file to build the front-end assets and already integrates Vite and the Laravel Vite packages.
 
