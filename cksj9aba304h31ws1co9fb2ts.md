@@ -249,11 +249,9 @@ The options are (taken from the [official documentation](https://twill.io/docs/#
 
 > \--hasRevisions (-R), to allow comparing and restoring past revisions of records
 > 
->   
 > \--hasNesting (-N), to enable nested items in the module listing  
 > \--parentModel=, to generate the route for a nested module. See ( see Nested Module)
 > 
->   
 > \--bladeForm, to generate a Blade form instead of using the new Form builder (more info [here](https://twillcms.com/blog/twill-3-introducing-oop-builders.html))
 
 Twill is amazing for this as you can choose the features you want to have available for your content, keeping simple content simple. All work with PHP Traits and additional classes, so if you forget an option, you can add it later based on sample codes.
@@ -263,6 +261,9 @@ Twill is amazing for this as you can choose the features you want to have availa
 We will call this Module *contentPage* and we will need Blocks (to have flexible content), Translations, Slugs, Medias, Position (to order them in the administration) and Revisions (we will not attach Files directly but maybe through Blocks):
 
 ```bash
+php artisan twill:make:module pageContent -BTSMPR 
+
+# If you want to handle the form through a Blade template, you can add the --bladeForm option (you still can create the file manually afterward
 php artisan twill:make:module pageContent -BTSMPR --bladeForm
 ```
 
@@ -310,7 +311,9 @@ It creates the following files in your application:
     
 * Add a navigation entry
     
-* Customize the fields of the Model and the form accordingly
+* Customize the fields of the Model
+    
+* Create the form accordingly (Blade components or OOP builder)
     
 * Customize the admin Controller if needed
     
@@ -331,7 +334,7 @@ TwillRoutes::module('pageContents');
 
 #### Navigation entry
 
-Since Twill 3, there is a new way to manage navigation, registering it in the AppServiceProvider (you still can use the legacy method defining you navigation in a `config/twill-navigation.php` file). More info in the [official documentation](https://twillcms.com/docs/getting-started/navigation.html))
+Since Twill 3, there is a new way to manage navigation, registering it in the AppServiceProvider (you still can use the legacy method defining you navigation in a `config/twill-navigation.php` file). More info in the [official documentation](https://twillcms.com/docs/getting-started/navigation.html)
 
 You can copy/paste what the CLI output suggested:
 
@@ -366,8 +369,8 @@ If you want to customize the title in the navigation, you can chain it with the 
     {
         TwillNavigation::addLink(
             NavigationLink::make()
-                ->forModule('pageContents')
                 ->title(Str::ucfirst(__('pages')))
+                ->forModule('pageContents')
         );
     }
 ```
@@ -376,118 +379,126 @@ To see our Module administration interface without triggering an error, we need 
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681568293228/dcfda5dc-33dd-4767-9f11-e869aed065f5.png align="center")
 
-This configuration add our Module on the global navigation (first level of the menu), but we have to organize our menu, so we will modify this configuration to access to our Module as a primary entry of a global menu `Content` (with Twill, you can have up to 3 levels for your menu):
+#### Navigation reorganization
 
-**/routes/admin.php**
+The default configuration adds our Module to the primary level of the navigation. As we want to organize our navigation, we will modify this configuration to access our Module at a secondary level of a global `Content` entry (Twill allows you to have up to 3 levels for your navigation):
 
-```xml
+**/routes/twill.php**
+
+```php
 <?php
 
+use A17\Twill\Facades\TwillRoutes;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'content'], function () {
-    Route::module('pages');
+    TwillRoutes::module('pageContents');
 });
 ```
 
-**/config/twill-navigation.php**
+**/app/Providers/AppServiceProvider.php**
 
-```xml
-<?php
-
-return [
-
-    'content' => [
-        'title' => 'Content',
-        'route' => 'admin.content.pages.index',
-        'primary_navigation' => [
-            'pages' => [
-                'title' => 'Pages',
-                'module' => true,
-            ],
-        ],
-    ],
-
-];
+```php
+    public function boot(): void
+    {
+        TwillNavigation::addLink(
+            NavigationLink::make()
+                ->title(Str::ucfirst(__('content')))
+                ->forModule('pageContents')
+                ->doNotAddSelfAsFirstChild()
+                ->setChildren([
+                    NavigationLink::make()
+                        ->title(Str::ucfirst(__('pages')))
+                        ->forModule('pageContents')
+                ]),
+        );
+    }
 ```
 
 **What it does**
 
-For the route, using standard Laravel routing, we encapsulate our Module routes definition in a group with the `content` prefix. As Twill routes already add `admin` prefix, our Module routes names will start with `admin.content.pages`
+For the route, using standard Laravel routing, we encapsulate our Module routes definition in a group with the `content` prefix. As Twill routes already add `twill` prefix, our Module routes names will start with `twill.content.pageContents`
 
-For the Twill navigation, we encapsulate our menu definition in a `content` block which has the following attributes:
+For the Twill navigation, we encapsulate our module as a child of a primary `content` navigation link which has the following attributes:
 
-* title: the text displayed in the menu
+* title(): the text displayed in the navigation
     
-* route: the route name of the page that will be displayed on click, for now, we want the index of our Module
+* forModule(): the module that will be displayed on click, for now, we want the index of our Module
     
-* primary\_navigation: the list of the submenus
+* doNotAddSelfAsFirstChild(): without this method, we would have 2 entries on the secondary level: `Content` and `Pages`
+    
+* setChildren(): the list of the navigation links for the secondary level
     
 
-![Twill navigation organized](https://cdn.hashnode.com/res/hashnode/image/upload/v1626446745343/lgnJ_CqGh.png align="left")
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681569399937/97f97a47-855b-4a9c-b28e-d9cf9a1f47df.png align="center")
 
 #### Model customization
 
-The migration, model and form files created by the generator is a template with default fields.
+The migration, model and form files created by the generator are a template with default fields.
 
-In our case we want:
+In our case, we want:
 
 * a title that can be translated
     
 * meta title and description that can be translated
     
-* the position to order our pages in the listing of the administration interface
+* a position to sort manually our pages in the listing of the administration interface
     
 * a block editor for all the content (we will focus on this part in a later article)
     
 
-Here is what final files look like.
+Here is what the final files look like.
 
-**/database/migration/...\_create\_pages\_table.php**
+**/database/migrations/...\_create\_page\_contents\_tables.php**
 
-```xml
+```php
 <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreatePagesTables extends Migration
+class CreatePageContentsTables extends Migration
 {
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('page_contents', function (Blueprint $table) {
             createDefaultTableFields($table);
         });
 
-        Schema::table('pages', function (Blueprint $table) {
-            $table->integer('position')->unsigned()->nullable()->after('id');
+        Schema::table('page_contents', function (Blueprint $table) {
+            $table->after('id', function ($table) {
+                $table->integer('position')->unsigned()->nullable();
+            });
         });
 
-        Schema::create('page_translations', function (Blueprint $table) {
-            createDefaultTranslationsTableFields($table, 'page');
+        Schema::create('page_content_translations', function (Blueprint $table) {
+            createDefaultTranslationsTableFields($table, 'page_content');
         });
 
-        Schema::table('page_translations', function (Blueprint $table) {
-            $table->string('title', 1000)->nullable()->after('page_id');
-            $table->string('meta_title', 100)->nullable()->after('title');
-            $table->text('meta_description', 200)->nullable()->after('meta_title');
+        Schema::table('page_content_translations', function (Blueprint $table) {
+            $table->after('page_content_id', function ($table) {
+                $table->string('title', 200)->nullable();
+                $table->string('meta_title', 100)->nullable();
+                $table->text('meta_description', 200)->nullable();
+            });
         });
 
-        Schema::create('page_slugs', function (Blueprint $table) {
-            createDefaultSlugsTableFields($table, 'page');
+        Schema::create('page_content_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'page_content');
         });
 
-        Schema::create('page_revisions', function (Blueprint $table) {
-            createDefaultRevisionsTableFields($table, 'page');
+        Schema::create('page_content_revisions', function (Blueprint $table) {
+            createDefaultRevisionsTableFields($table, 'page_content');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('page_revisions');
-        Schema::dropIfExists('page_translations');
-        Schema::dropIfExists('page_slugs');
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('page_content_revisions');
+        Schema::dropIfExists('page_content_translations');
+        Schema::dropIfExists('page_content_slugs');
+        Schema::dropIfExists('page_contents');
     }
 }
 ```
@@ -496,19 +507,19 @@ class CreatePagesTables extends Migration
 
 We can now run our migration to create the tables for our Module:
 
-```xml
+```bash
 php artisan migrate
 ```
 
-**/app/Models/Page.php**
+**/app/Models/PageContent.php**
 
-```xml
+```php
 // ...
     protected $fillable = [
-        'published',
         'title',
         'meta_title',
         'meta_description',
+        'published',
         'position',
     ];
 
@@ -523,48 +534,127 @@ php artisan migrate
 
 > Twill uses Laravel Eloquent mass assignment, so we need to declare all our attributes in the `fillable` property, and the translatable attributes in the `translatedAttributes` property (it's a common mistake to forget to add our attributes or a new one created after as Twill won't trigger an error when you edit your content, but your value will not be saved)
 
-**/resources/views/admin/pages/form.blade.php**
+#### Form creation
 
-```xml
+In Twill 2, forms were Blade components, Twill 3 introduces a Form builder allowing you to define the form in PHP in the module controller.
+
+Blade components give you more flexibility for very complex forms or if you want to integrate custom HTML. For standard forms, the Form builder seems to do the job. We will see both ways.
+
+#### Form through Blade components
+
+If you set the `--bladeForm` option on the module creation, the file already exists, if not you have to create it manually.
+
+**/resources/views/twill/pageContents/form.blade.php**
+
+```scss
 @extends('twill::layouts.form')
 
 @section('contentFields')
-    @formField('block_editor', [
-        'withoutSeparator' => true,
-        // 'blocks' => []
-    ])
+    
+    <x-twill::block-editor
+        :withoutSeparator="true"
+    />
+
 @stop
 
 @section('sideFieldsets')
-    @formFieldset([ 'id' => 'seo', 'title' => 'SEO'])
-        @formField('input', [
-            'name' => 'meta_title',
-            'label' => 'Title',
-            'translated' => true,
-            'maxlength' => 100,
-        ])
+    @formFieldset([ 'id' => 'seo', 'title' => 'Référencement'])
 
-        @formField('input', [
-            'name' => 'meta_description',
-            'label' => 'Description',
-            'translated' => true,
-            'maxlength' => 200,
-        ])
+        <x-twill::input
+            label="Title"
+            name="meta_title"
+            :translated="true"
+            :maxlength="100"
+        />
+
+        <x-twill::input
+            label="Description"
+            name="meta_description"
+            :translated="true"
+            :maxlength="200"
+        />
+
     @endformFieldset
 @stop
 ```
 
-> In the `contentFields` section, we remove the title and add a `block_editor` field (the `withoutSeparator` option just removes a separator displayed before it on the edit page and the `blocks` option allows to make available a specific list of blocks, otherwise all blocks can be added)
+> In the `contentFields` section, we remove the title and add a `block_editor` field (the `withoutSeparator` option just removes a separator displayed before it on the edit page)
 
 > We create a `sideFieldsets` section where we add our SEO fields
 
-Now we can manage our content in the administration interface. Let's click on the *Add new* button to see a modal asking us the title of our page (the permalink aka slug is automatically generated but you can edit it). You can fill the information for each language and also change the publication status of your content or for each language):
+#### Form through Form builder
 
-![Content creation - Modal](https://cdn.hashnode.com/res/hashnode/image/upload/v1626447569529/q6LdgkTSX.png align="left")
+The configuration is made directly in the module controller.
+
+**/app/Http/Controllers/Admin/PageContentController.php**
+
+```php
+<?php
+
+namespace App\Http\Controllers\Twill;
+
+use A17\Twill\Http\Controllers\Admin\ModuleController as BaseModuleController;
+use A17\Twill\Models\Contracts\TwillModelContract;
+use A17\Twill\Services\Forms\Fields\BlockEditor;
+use A17\Twill\Services\Forms\Fields\Input;
+use A17\Twill\Services\Forms\Fieldset;
+use A17\Twill\Services\Forms\Form;
+
+class PageContentController extends BaseModuleController
+{
+    public function getForm(TwillModelContract $model): Form
+    {
+        $form = parent::getForm($model);
+
+        $form->add(
+            BlockEditor::make()
+                ->withoutSeparator()
+        );
+
+        return $form;
+    }
+
+    public function getSideFieldsets(TwillModelContract $model): Form
+    {
+        $form = parent::getSideFieldsets($model);
+
+        $form->addFieldset(
+            Fieldset::make()
+                ->title('SEO')
+                ->id('seo')
+                ->fields([
+                    Input::make()
+                        ->name('meta_title')
+                        ->label('Title')
+                        ->translatable()
+                        ->maxLength(100),
+
+                    Input::make()
+                        ->name('meta_description')
+                        ->label('Description')
+                        ->translatable()
+                        ->maxLength(200),
+                ])
+        );
+
+        return $form;
+    }
+}
+```
+
+> The `getForm()` method defines the fields or fieldsets in the left column
+> 
+> The `getSideFieldsets()` method defines the additional fields or fieldsets in the side/right column
+
+#### Form in action
+
+Now we can manage our content in the administration interface. Let's click on the *Add new* button to see a modal asking us for the title of our page (the permalink aka slug is automatically generated but you can edit it). You can fill in the information for each language and also change the publication status of your content globally and for each language):
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681569793440/ec3f55d8-ee83-4be3-8372-a980e6219252.png align="center")
 
 And here is the form for editing our content:
 
-![Content creation - Form](https://cdn.hashnode.com/res/hashnode/image/upload/v1626448839004/tU22hf5qy.png align="left")
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681570266696/8d092b35-1649-4982-8e90-3e855fa7526d.png align="center")
 
 #### Admin Controller customization
 
@@ -572,43 +662,36 @@ Maybe have you seen on the form screenshot an URL under the title. Twill display
 
 Here is some basic customization:
 
-**/app/Http/Controllers/Admin/PageController.php**
+**/app/Http/Controllers/Admin/PageContentController.php**
 
-```xml
+```php
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Twill;
 
-use A17\Twill\Http\Controllers\Admin\ModuleController;
+use A17\Twill\Http\Controllers\Admin\ModuleController as BaseModuleController;
 
-class PageController extends ModuleController
+class PageContentController extends BaseModuleController
 {
-    protected $moduleName = 'pages';
+    protected $moduleName = 'pageContents';
 
-    protected $permalinkBase = '';
-
-    protected $indexOptions = [
-        'reorder' => true,
-    ];
-
-    protected $indexColumns = [
-        'title' => [
-            'title' => 'Page',
-            'field' => 'title',
-        ],
-    ];
+    protected function setUpController(): void
+    {
+        $this->setPermalinkBase('');
+        $this->enableReorder();
+    }
 }
 ```
 
-> We add an empty `permalinkBase` property to tell Twill our pages will be availble directly under the Web root path.
+> We set an empty `permalinkBase` property to tell Twill our pages will be available directly under the Web root path.
 
-> We add `indexOptions` array property to allow us to order our pages in the administration listing interface (this property allows you to activate or desactivate many features like creation, publication, duplication, deletion, ...).
+> We enable reordering
 
-> We add `indexColumns` array property (even if it's not necessary here as Twill uses `title` attribute as the default and only column to display). We can later add thumbnails, computed, relationship or presented fields that can be sortable, not visible by default, ...
+More info in the [official documentation](https://twillcms.com/docs/modules/controllers.html#content-controller-setup)
 
 ---
 
-**We now have a basic (for now) but working administration interface to manage content, we will see in later articles how to display it on our front-end with Inertia and get more complex content structure**
+**We now have a basic (for now) but working administration interface to manage content, we will see in later articles how to display it on our front-end with Inertia and handle more complex content structure**
 
 ---
 
