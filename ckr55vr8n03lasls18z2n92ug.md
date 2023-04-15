@@ -43,7 +43,9 @@ yarn add typescript --dev
 yarn add @inertiajs/vue3
 ```
 
-## Inertia configuration
+## Configurations
+
+### Inertia
 
 We need a TypeScript file to boot our Inertia application, so let's create `app.ts` file in `/resources/js/` (you can rename the previous default `app.js` - or name it like you want and adapt the other files accordingly - and delete the `bootstrap.js` file).
 
@@ -77,7 +79,7 @@ createInertiaApp({
 * Create the application, looking for Pages Vue Components *(that replace standard Laravel Blade files)* in `/views/Pages` when rendering from Laravel Controller
     
 
-## Vite configuration
+### Vite
 
 Laravel comes with a default `vite.config.ts` file in our project root folder with laravel plugin configured that we are going to edit:
 
@@ -127,7 +129,7 @@ export default defineConfig({
         * `vue`: use the Vite Vue plugin
             
 
-## TypeScript configuration
+### TypeScript
 
 We create a `tsconfig.json` in our project root folder:
 
@@ -193,7 +195,7 @@ We create a `tsconfig.json` in our project root folder:
 * Defines the include folders: all `.ts`, `.d.ts` and `.vue` files in our `resources` folders
     
 
-## Scripts definition
+### Scripts definition
 
 All the configuration is set, let's have a look at the Vite scripts in our `package.json`
 
@@ -352,7 +354,7 @@ and...
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681474424942/ae4ba4a4-fd14-43f8-beee-c42fa10ce617.png align="center")
 
-### And maybe should we validate production build
+### And maybe should we validate the production build
 
 First we build our assets.
 
