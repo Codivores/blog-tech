@@ -12,29 +12,6 @@ tags: laravel, php, cms, twill
 
 > **Updated version for Laravel 10 / Twill 3 on Apr 14, 2023**
 
-In this article, we will see
-
-* [Twill installation and configuration](#installation-and-configuration)
-    
-    * [Dependencies installation](#dependencies-installation)
-        
-    * [Twill installation](#twill-installation)
-        
-    * [URL configuration](#where-is-my-twill)
-        
-    * [Multi-language configuration](#multi-language-configuration)
-        
-* [Creation and customization of a first content module](#ready-to-create-content)
-    
-    * [Content Module creation](#ready-to-create-content)
-        
-    * [Route and menu customization](#route-and-menu-management)
-        
-    * [Model customization](#model-customization)
-        
-    * [Admin Controller customization](#admin-controller-customization)
-        
-
 ## Dependencies installation
 
 Twill comes as a Laravel package that can be installed via Composer. You can refer to the [official documentation](https://twillcms.com/docs/) for more information.
