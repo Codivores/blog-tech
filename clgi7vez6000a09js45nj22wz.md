@@ -488,7 +488,7 @@ More info in the [official documentation](https://twillcms.com/docs/modules/cont
 
 ---
 
-**We now have a basic (for now) but working administration interface to manage content, we will see in later articles how to display it on our front-end with Inertia and handle more complex content structure**
+**We now have a first module to handle content pages, we will see in later articles how to display it on our front-end with Inertia and handle more complex content structure with blocks**
 
 ---
 
