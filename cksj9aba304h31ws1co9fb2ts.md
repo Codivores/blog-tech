@@ -35,9 +35,7 @@ In this article, we will see
     * [Admin Controller customization](#admin-controller-customization)
         
 
-## Installation and configuration
-
-### Dependencies installation
+## Dependencies installation
 
 Twill comes as a Laravel package that can be installed via Composer. You can refer to the [official documentation](https://twillcms.com/docs/) for more information.
 
@@ -45,7 +43,7 @@ Twill comes as a Laravel package that can be installed via Composer. You can ref
 composer require area17/twill:"^3.0"
 ```
 
-### Twill installation
+## Twill installation
 
 #### What does that mean?
 
@@ -127,7 +125,7 @@ We have an email address *(no mail will be sent)* and a password, we are ready f
 php artisan twill:install
 ```
 
-### Where is my Twill
+## Where is my Twill
 
 The administration interface is available by default as `admin` path of your `APP_URL` environment variable (defined when you installed Laravel in your `/.env` file): `http://localhost/admin`.
 
@@ -168,7 +166,7 @@ Filling the login form with the superadmin email and password we set earlier, we
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681485842850/7401a84c-f3bf-4345-9e7f-e7ed9a7b04c4.png align="center")
 
-### Multi-language configuration
+## Multi-language configuration
 
 Twill allows you to manage your content in multiple languages and also have the administration in different languages.
 
