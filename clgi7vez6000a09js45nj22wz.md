@@ -98,6 +98,8 @@ It generates the following files in your application:
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681566941833/8602ad02-6aa6-4308-a5f6-cf0d0e22de9b.png align="left")
 
+If you added the `--bladeForm` option, you also have the form template file:
+
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681566962922/23e66d76-9ad3-44e9-876c-c919497db3a9.png align="left")
 
 ### What next
