@@ -12,15 +12,6 @@ tags: laravel, vuejs, tailwind-css, inertiajs
 
 > **Updated version for Laravel 10 / Twill 3 on Apr 14, 2023**
 
-In this article, we will
-
-* [Install and configure Tailwind](#heading-installation-and-configuration)
-    
-* [Integrate it into our application](#heading-integration-in-our-application)
-    
-* [Play with Inertia and a basic Tailwind component](#heading-time-to-play)
-    
-
 ## Installation and configuration
 
 For these steps, we will mainly follow the [official documentation](https://tailwindcss.com/docs/installation/using-postcss).
