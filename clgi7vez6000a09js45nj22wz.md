@@ -114,6 +114,8 @@ If you added the `--bladeForm` option, you also have the form template file:
     
 * Customize the admin Controller if needed
     
+* Morph map
+    
 
 ## Routes and Navigation configuration
 
@@ -487,6 +489,36 @@ class PageContentController extends BaseModuleController
 > We enable reordering
 
 More info in the [official documentation](https://twillcms.com/docs/modules/controllers.html#content-controller-setup)
+
+## Morph map
+
+Twill uses many pivot tables to handle polymorphic relationships with the module Models: medias, files, blocks, features, tags and [Spatie activity log package](https://spatie.be/docs/laravel-activitylog/v4/introduction).  
+The default behavior is to store the fully qualified class name in the database, with MorphMap you can provide an alias that improves readability and decouples the class name from the stored data.
+
+Since Laravel 8.59, you can enforce a morph map for every class used in a morph, preventing you from forgetting to define the morph map when you create a new Twill module.
+
+**/app/Providers/AppServiceProvider.php**
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Database\Eloquent\Relations\Relation;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Relation::enforceMorphMap([
+            'pageContent' => 'App\Models\PageContent',
+        ]);
+    }
+}
+```
 
 ---
 
