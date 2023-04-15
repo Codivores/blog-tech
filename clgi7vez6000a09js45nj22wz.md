@@ -5,24 +5,14 @@ seoDescription: "Discover Twill, a CMS package for Laravel, and build with us yo
 datePublished: Fri Aug 20 2021 16:52:11 GMT+0000 (Coordinated Universal Time)
 cuid: clgi7vez6000a09js45nj22wz
 slug: ltivt-5-laravel-twill-first-module
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1681577663233/d7ce6d6a-8300-4178-939e-2c5b44fc28ba.avif
 tags: laravel, php, cms, twill
 
 ---
 
 > **Updated version for Laravel 10 / Twill 3 on Apr 14, 2023**
 
-In this article, we will see the creation and customization of a first content module
-
-/
-
-* [Content Module creatio](#ready-to-create-content)n
-    
-* [Route and menu customization](#route-and-menu-management)
-    
-* [Model customization](#model-customization)
-    
-    * [Admin Controller customization](#admin-controller-customization)
-        
+In this article, we will see the creation and customization of a first content module.
 
 ## Module creation
 
@@ -102,7 +92,9 @@ Do not forget to migrate your database after modifying the migrations.
 Enjoy.
 ```
 
-It creates the following files in your application:
+### Files generated
+
+It generates the following files in your application:
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681566941833/8602ad02-6aa6-4308-a5f6-cf0d0e22de9b.png align="left")
 
@@ -121,7 +113,9 @@ It creates the following files in your application:
 * Customize the admin Controller if needed
     
 
-## Routes configuration
+## Routes and Navigation configuration
+
+### Routes configuration
 
 Since Twill 3, the module routes are automatically added at the end of the file as a root entry (if you are still using Twill 2, you need to add it manually).
 
@@ -135,7 +129,7 @@ use A17\Twill\Facades\TwillRoutes;
 TwillRoutes::module('pageContents');
 ```
 
-## Navigation entry
+### Navigation entry
 
 Since Twill 3, there is a new way to manage navigation, registering it in the AppServiceProvider (you still can use the legacy method defining you navigation in a `config/twill-navigation.php` file). More info in the [official documentation](https://twillcms.com/docs/getting-started/navigation.html)
 
@@ -182,7 +176,7 @@ To see our Module administration interface without triggering an error, we need 
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681568293228/dcfda5dc-33dd-4767-9f11-e869aed065f5.png align="center")
 
-## Navigation reorganization
+### Navigation reorganization
 
 The default configuration adds our Module to the primary level of the navigation. As we want to organize our navigation, we will modify this configuration to access our Module at a secondary level of a global `Content` entry (Twill allows you to have up to 3 levels for your navigation):
 
