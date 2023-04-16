@@ -1,10 +1,10 @@
 ---
 title: "Twill & Inertia improvements"
-seoTitle: "Laravel Twill Inertia - First module improvments"
+seoTitle: "Laravel Twill Inertia - First module improvements"
 seoDescription: "Improve logic, performance, DX of the Laravel Twill Inertia Vue 3 application"
 datePublished: Fri Apr 14 2023 17:02:33 GMT+0000 (Coordinated Universal Time)
 cuid: clgjnoakq000009mf0a4nhu0v
-slug: ltivt-6-twill-inertia-improvments
+slug: ltivt-6-twill-inertia-improvements
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1681638786326/1113a320-d4cf-4b81-85d0-4899bff7e0f4.avif
 tags: laravel, vuejs, inertiajs, twill
 
@@ -103,7 +103,7 @@ If we inspect the props, we see there are just the needed attributes:
 
 ## Cache
 
-Our content will not change often and loading all the needed data implies multiple queries:
+Our content will not change often and loading all the needed data implies multiple queries that necessarily takes some time:
 
 * Search for a published Model with the given slug
     
@@ -230,3 +230,9 @@ defineProps<Props>()
 No more warnings, and we can have information in our IDE about the properties of the object and their types:
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681663503601/4f7a0c33-5d89-474e-b25c-64009742c891.png align="left")
+
+---
+
+> We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind)
+
+%[https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind]
