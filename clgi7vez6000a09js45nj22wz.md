@@ -6,7 +6,7 @@ datePublished: Fri Aug 20 2021 16:52:11 GMT+0000 (Coordinated Universal Time)
 cuid: clgi7vez6000a09js45nj22wz
 slug: ltivt-5-laravel-twill-first-module
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1681577663233/d7ce6d6a-8300-4178-939e-2c5b44fc28ba.avif
-tags: laravel, php, cms, twill
+tags: laravel, php, vuejs, inertiajs, twill
 
 ---
 
@@ -644,7 +644,7 @@ defineProps<Props>()
 * Display the `item.title` in a centered full-screen page
     
 
-### Check it out
+### Final result
 
 If you publish your page (status Live), you can click on the permalink to open the front-end page in a new tab:
 
