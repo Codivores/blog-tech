@@ -43,7 +43,7 @@ The options are (taken from the [official documentation](https://twill.io/docs/#
 > \--hasRevisions (-R), to allow comparing and restoring past revisions of records
 > 
 > \--hasNesting (-N), to enable nested items in the module listing  
-> \--parentModel=, to generate the route for a nested module. See ( see Nested Module)
+> \--parentModel=, to generate the route for a nested module
 > 
 > \--bladeForm, to generate a Blade form instead of using the new Form builder (more info [here](https://twillcms.com/blog/twill-3-introducing-oop-builders.html))
 
@@ -135,7 +135,7 @@ TwillRoutes::module('pageContents');
 
 ### Navigation entry
 
-Since Twill 3, there is a new way to manage navigation, registering it in the AppServiceProvider (you still can use the legacy method defining you navigation in a `config/twill-navigation.php` file). More info in the [official documentation](https://twillcms.com/docs/getting-started/navigation.html)
+Since Twill 3, there is a new way to manage navigation, registering it in the AppServiceProvider (you still can use the legacy method defining your navigation in a `config/twill-navigation.php` file). More info in the [official documentation](https://twillcms.com/docs/getting-started/navigation.html)
 
 You can copy/paste what the CLI output suggested:
 
@@ -304,7 +304,7 @@ class CreatePageContentsTables extends Migration
 }
 ```
 
-> As the `createDefault...()` functions create the timestamp and soft delete columns, we use an update of the structure to add our columns in a more pleasant order but it's not a requirement, you can define your columns in the create method
+> As the `createDefault...()` functions create the timestamp and soft delete columns, we use an update of the structure to add our columns in a more pleasant order but it's not a requirement, you can define your columns in the `Schema::create()` closure
 
 We can now run our migration to create the tables for our Module:
 
@@ -520,9 +520,143 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
+## Let's talk about Front-end and Inertia
+
+This module aims to display content pages on our front-end. To do so, we need:
+
+* a Laravel Route
+    
+* a Laravel Controller
+    
+* an Inertia Page
+    
+
+### Route
+
+Our route catches all GET HTTP requests with a slug from the Web root path:
+
+**/routes/web.php**
+
+```php
+<?php
+
+use App\Http\Controllers\App\PageContentController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/{slug}', [PageContentController::class, 'show'])->name('page.content.show');
+```
+
+### Controller
+
+To handle the logic, we need a Controller. As Twill already stores its controllers in a `Twill` directory of `/app/Http/Controllers`, we will store our application controllers in a `App` directory (it is not mandatory, but it may help in your project organization, and of course, you can choose the name you want, like `Site`, `Front`, ...).
+
+The first step is to move the default `/app/Http/Controllers/Controller.php` in `app/Http/Controllers/App/` and change its namespace (again, it is not mandatory):
+
+**/app/Http/Controllers/App/Controller.php**
+
+```php
+<?php
+
+namespace App\Http\Controllers\App;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
+class Controller extends BaseController
+{
+    use AuthorizesRequests, ValidatesRequests;
+}
+```
+
+Now we can create our App Module controller:
+
+**/app/Http/Controllers/App/PageContentController.php**
+
+```php
+<?php
+
+namespace App\Http\Controllers\App;
+
+use App\Models\PageContent;
+use Illuminate\Http\Response;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+
+class PageContentController extends Controller
+{
+    public function show(string $slug): InertiaResponse
+    {
+        $item = PageContent::publishedInListings()
+            ->forSlug($slug)
+            ->first();
+
+        abort_if($item === null, Response::HTTP_NOT_FOUND);
+
+        return Inertia::render('Page/Content', [
+            'item' => $item,
+        ]);
+    }
+}
+```
+
+**What it does**
+
+* Load the Twill Model (item), from its query builder:
+    
+    * publishedInListings(): scope that adds `published == true` and if you use publish dates (publish\_start\_date and publish\_end\_date), checks that the Model is currently visible (`publish_start_date <= now()` and `publish_end_date >= now()`)
+        
+    * forSlug(string $slug): scope that looks for Models that have an **active slug** that matches the string given **for the current locale**
+        
+    * first(): return the first Model that matches the query criterias and return `null` if none are found
+        
+* Return a 404 if the Model is `null`
+    
+* Renders the Inertia `Page/Content` Page with `item` as a prop
+    
+
+### Page
+
+Last step, we create our Inertia Page as a Vue Single-File Component (SFC):
+
+```javascript
+<script setup lang="ts">
+interface Props {
+  item: object
+}
+
+defineProps<Props>()
+</script>
+
+<template>
+  <div class="bg-gray-200 w-full h-screen flex flex-col justify-center items-center">
+    <h1 class="text-center text-4xl font-semibold text-gray-900">
+      {{ item.title }}
+    </h1>
+  </div>
+</template>
+```
+
+**What it does**
+
+* Declare the `item` prop as a generic object (we will see later how to improve the props declarations)
+    
+* Display the `item.title` in a centered full-screen page
+    
+
+### Check it out
+
+If you publish your page (status Live), you can click on the permalink to open the front-end page in a new tab:
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681638122771/c451b8a6-a9d4-4ce9-a324-aa5ce22d15bd.png align="center")
+
+and you should see:
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681638296220/adaa486f-951d-4ec5-89b9-552cbc3554a4.png align="center")
+
 ---
 
-**We now have a first module to handle content pages, we will see in later articles how to display it on our front-end with Inertia and handle more complex content structure with blocks**
+**We now have a first module to handle content pages, we will see in later articles how to improve logic, performance and handle more complex content structure with blocks**
 
 ---
 
