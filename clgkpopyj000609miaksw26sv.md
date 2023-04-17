@@ -4,7 +4,7 @@ seoTitle: "Laravel Twill Inertia - Application level improvements"
 seoDescription: "Improve your application structure using layouts, global head component"
 datePublished: Mon Apr 17 2023 10:47:10 GMT+0000 (Coordinated Universal Time)
 cuid: clgkpopyj000609miaksw26sv
-slug: application-level-improvements
+slug: ltivt-7-application-level-improvements
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1681665253746/8a644a6b-bcaf-4ca9-9d08-91609d0698ea.avif
 tags: laravel, vuejs, inertiajs, twill
 
