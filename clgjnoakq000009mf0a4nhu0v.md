@@ -231,6 +231,46 @@ No more warnings, and we can have information in our IDE about the properties of
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681663503601/4f7a0c33-5d89-474e-b25c-64009742c891.png align="left")
 
+## Vue plugins
+
+Vue provides many plugins that can improve DX.
+
+### Define Options
+
+As we use Vue Composition API, some features are not available in `<script setup>` like defining component name and other properties, ... and that are available in Vue Options API.
+
+There is a plugin that provides a `defineOptions` macro that can be used in `<script setup>`
+
+**Installation**
+
+```bash
+yarn add unplugin-vue-define-options --dev
+```
+
+**Configuration of the plugin in /vite.config.js**
+
+```typescript
+import DefineOptions from 'unplugin-vue-define-options/vite';
+
+export default defineConfig({
+    plugins: [
+        ...
+        DefineOptions(),
+    ],
+});
+```
+
+**Usage**
+
+```typescript
+<script setup lang="ts">
+defineOptions({
+  name: 'PageContent',
+  layoutName: 'FullPage',
+})
+</script>
+```
+
 ---
 
 > We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind)
