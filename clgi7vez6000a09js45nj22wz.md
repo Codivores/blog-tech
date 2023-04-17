@@ -617,7 +617,9 @@ class PageContentController extends Controller
 
 ### Page
 
-Last step, we create our Inertia Page as a Vue Single-File Component (SFC):
+The last step, we create our Inertia Page as a Vue Single-File Component (SFC).
+
+**/resources/views/Pages/Page/Content.vue**
 
 ```javascript
 <script setup lang="ts">
