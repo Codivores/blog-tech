@@ -231,6 +231,89 @@ No more warnings, and we can have information in our IDE about the properties of
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681663503601/4f7a0c33-5d89-474e-b25c-64009742c891.png align="left")
 
+## Vite / TypeScript alias
+
+As our application grows, we will have more and more components, split into different directories to keep a clean architecture (and maybe at some point we will create a new version of the theme, components, ...).
+
+To simplify how we import components into other components and avoid relative paths like `../../Theme/Head.vue`, we can benefit from `alias` feature to map an alias to a path and make it available in code and IDE.
+
+We generally define 3 default aliases on a new project:
+
+* `@Composable`: stores our Vue Composition API composables
+    
+* `@Form`: stores our form components (input, select, switch, ...)
+    
+* `@Theme`: stores our theme components (head, blocks, ...)
+    
+
+Feel free to create yours according to your project structure.
+
+### Configuration
+
+The aliases have to be known by Vite (Rollup) and the TypeScript compiler.
+
+**/vite.config.js**
+
+```typescript
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    resolve: {
+        alias: [
+          {
+            find: '@Composable',
+            replacement: '/resources/js/Composables'
+          },
+          {
+            find: "@Form",
+            replacement: `/resources/views/Components/Form`,
+          },
+          {
+            find: '@Theme',
+            replacement: '/resources/views/Components/Theme'
+          }
+        ]
+    },
+
+    ...
+});
+```
+
+**/tsconfig.json**
+
+```typescript
+{
+  "compilerOptions": {
+    ...
+
+    "paths": {
+      "@/*": ["resources/*"],
+      "@Composable/*": ["resources/js/Composables/*"],
+      "@Form/*": ["resources/views/Components/Form/*"],
+      "@Theme/*": ["resources/views/Components/Theme/*"]
+    },
+
+    ...
+  }
+}
+```
+
+### Usage
+
+In your component, you can now import other components more easily.
+
+In the example, the `Head` component is resolved from `@Theme/Head.vue` to `/resources/views/Components/Theme/Head.vue`
+
+```typescript
+<script setup lang="ts">
+import Head from '@Theme/Head.vue'
+</script>
+
+<template>
+  <Head></Head>
+</template>
+```
+
 ## Vue plugins
 
 Vue provides many plugins that can improve DX.
