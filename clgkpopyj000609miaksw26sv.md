@@ -1,10 +1,10 @@
 ---
-title: "Inertia Layouts / Head"
+title: "Application level improvements"
 seoTitle: "Laravel Twill Inertia - Application level improvements"
 seoDescription: "Improve your application structure using layouts, global head component"
 datePublished: Mon Apr 17 2023 10:47:10 GMT+0000 (Coordinated Universal Time)
 cuid: clgkpopyj000609miaksw26sv
-slug: inertia-layouts-head
+slug: application-level-improvements
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1681665253746/8a644a6b-bcaf-4ca9-9d08-91609d0698ea.avif
 tags: laravel, vuejs, inertiajs, twill
 
@@ -99,7 +99,7 @@ More info in the [official documentation](https://inertiajs.com/pages#creating-l
 > 
 > ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1681721891269/63c78f7e-e8c8-4f70-acc7-8a723e04561a.png align="left")
 
-### How to define the Layout on our pages
+### Define the Layout of the page
 
 Now we can choose our layout on each page.
 
