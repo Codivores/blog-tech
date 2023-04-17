@@ -1,5 +1,5 @@
 ---
-title: "Twill & Inertia improvements"
+title: "Twill, Inertia and Vue improvements"
 seoTitle: "Laravel Twill Inertia - First module improvements"
 seoDescription: "Improve logic, performance, DX of the Laravel Twill Inertia Vue 3 application"
 datePublished: Fri Apr 14 2023 17:02:33 GMT+0000 (Coordinated Universal Time)
