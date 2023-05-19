@@ -320,6 +320,8 @@ Vue provides many plugins that can improve DX.
 
 ### Define Options
 
+> From 3.3 version of Vue, this macro has been integrated into the core: [https://vuejs.org/api/sfc-script-setup.html#defineoptions](https://vuejs.org/api/sfc-script-setup.html#defineoptions)
+
 As we use Vue Composition API, some features are not available in `<script setup>` like defining component name and other properties, ... and that are available in Vue Options API.
 
 There is a plugin that provides a `defineOptions` macro that can be used in `<script setup>`
