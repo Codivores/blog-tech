@@ -139,9 +139,11 @@ class PageContentController extends Controller
                 $item = PageContent::publishedInListings()
                     ->forSlug($slug)
                     ->first();
+
                 if ($item !== null) {
                     $item->load('translations', 'medias', 'blocks');
                 }
+
                 return $item;
             }
         );
@@ -169,7 +171,7 @@ class PageContentRepository extends ModuleRepository
 
     public function afterSave($object, $fields): void
     {
-        // Cache clearing
+        // Cache clearing.
         foreach (optional($object)->slugs as $slug) {
             Cache::forget('page.content.' . $slug->locale . '.' . $slug->slug);
         }
