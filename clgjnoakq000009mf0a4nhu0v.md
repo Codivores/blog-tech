@@ -383,7 +383,7 @@ export default defineConfig({
 });
 ```
 
-### Define Options
+### DefineOptions
 
 > From 3.3 version of Vue, this macro has been integrated into the Vue core package: [https://vuejs.org/api/sfc-script-setup.html#defineoptions](https://vuejs.org/api/sfc-script-setup.html#defineoptions)
 
