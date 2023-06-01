@@ -423,6 +423,16 @@ defineOptions({
 </script>
 ```
 
+## Tailwind Automatic Class Sorting
+
+Tailwind provides a Prettier plugin to automatically sort the utility classes according to the [official recommended class order](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier#how-classes-are-sorted).
+
+**Installation**
+
+```bash
+yarn add prettier prettier-plugin-tailwindcss --dev
+```
+
 ---
 
 > We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind)
