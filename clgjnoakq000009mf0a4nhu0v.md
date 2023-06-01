@@ -1,5 +1,5 @@
 ---
-title: "Twill, Inertia and Vue improvements"
+title: "Twill, Inertia, Vue and Tailwind improvements"
 seoTitle: "Laravel Twill Inertia - First module improvements"
 seoDescription: "Improve logic, performance, DX of the Laravel Twill Inertia Vue 3 application"
 datePublished: Fri Apr 14 2023 17:02:33 GMT+0000 (Coordinated Universal Time)
@@ -423,9 +423,9 @@ defineOptions({
 </script>
 ```
 
-## Tailwind Automatic Class Sorting
+## Tailwind Automatic Class Sorting plugin
 
-Tailwind provides a Prettier plugin to automatically sort the utility classes according to the [official recommended class order](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier#how-classes-are-sorted).
+Tailwind provides a Prettier plugin to automatically sort the utility classes according to the [official recommended class order](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier#how-classes-are-sorted), freeing the heads of you and your team from this purpose.
 
 **Installation**
 
