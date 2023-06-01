@@ -200,13 +200,11 @@ const description =
 
 <template>
   <InertiaHead :title="title ? `${title} | ${appName}` : appName">
-    <template v-if="description !== ''">
-      <meta
-        head-key="description"
-        name="description"
-        :content="description"
-      />
-    </template>
+    <meta
+      head-key="description"
+      name="description"
+      :content="description"
+    />
   </InertiaHead>
 </template>
 ```
