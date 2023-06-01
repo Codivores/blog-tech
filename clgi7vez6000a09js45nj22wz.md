@@ -387,7 +387,7 @@ If you set the `--bladeForm` option on the module creation, the file already exi
 
 The configuration is made directly in the module controller.
 
-**/app/Http/Controllers/Admin/PageContentController.php**
+**/app/Http/Controllers/Twill/PageContentController.php**
 
 ```php
 <?php
