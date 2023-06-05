@@ -2,7 +2,7 @@
 title: "Twill preview with Inertia"
 seoTitle: "Laravel Twill - Preview with Inertia"
 seoDescription: "Deep dive into Twill, a CMS package for Laravel, and preview your content in an Inertia page in your admin"
-datePublished: Fri Jun 02 2023 06:00:39 GMT+0000 (Coordinated Universal Time)
+datePublished: Mon Jun 05 2023 09:05:38 GMT+0000 (Coordinated Universal Time)
 cuid: clie5pfqv0d1wyanvb25y2jut
 slug: ltivt-9-laravel-twill-preview-with-inertia
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1685630161377/cee34abe-e15b-4395-a75f-b39431e40c8e.avif
