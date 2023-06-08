@@ -2,9 +2,9 @@
 title: "Laravel - Backup your filesystem disks"
 seoTitle: "Laravel Backup: How to back up External Filesystem Disks"
 seoDescription: "Learn how to efficiently back up your Laravel application's external disks using the powerful Laravel Backup package with a step-by-step guide"
-datePublished: Thu Jun 08 2023 08:47:50 GMT+0000 (Coordinated Universal Time)
+datePublished: Thu Jun 08 2023 08:48:31 GMT+0000 (Coordinated Universal Time)
 cuid: climwbk3p000n08mg4p571qq6
-slug: laravel-backup-filesystem-disks
+slug: laravel-backup-external-filesystem-disks
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1686036807580/7a66a772-6be2-4530-a877-fd1b757eada0.png
 tags: cloud, laravel, php, backup, spatie
 
