@@ -298,6 +298,8 @@ We will create a Model that extends Twill's Model in which we will add a method 
 
 > For now, we will just handle the blocks, but this class will also allow us to manage Model medias, files, slug, and also medias, browsers, ... in blocks
 
+**/app/Models/Base/Model.php**
+
 ```php
 <?php
 
@@ -385,6 +387,8 @@ It must now:
     
 * declare the `blocks` attribute in its `$publicAttributes` array attribute
     
+
+**/app/Models/PageContent.php**
 
 ```php
 <?php
