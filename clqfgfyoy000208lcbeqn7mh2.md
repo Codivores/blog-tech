@@ -934,7 +934,7 @@ For the demonstration, we will create a pricing table.
 
 ### Twill Block component
 
-**/app/View/Components/Twill/Blocks/Sandbox/PricingPlan.php**
+**/app/View/Components/Twill/Blocks/Sandbox/PricingTable.php**
 
 ```php
 <?php
@@ -1011,7 +1011,7 @@ class PricingTable extends Base
 
 ### Vue 3 Block component
 
-**/resources/views/Components/Theme/Block/Sandbox/PricingPlan.vue**
+**/resources/views/Components/Theme/Block/Sandbox/PricingTable.vue**
 
 ```javascript
 <script setup lang="ts">
