@@ -926,6 +926,180 @@ defineProps<Props>()
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703177715525/a91a0fd4-849f-4cf2-b7b6-7308225ff835.png align="center")
 
+## Sandbox - Pricing Plan Block
+
+An example to show the use of the Twill `InlineRepeater`, enabling the easy creation of dynamic content lists.
+
+For the demonstration, we will create a pricing table.
+
+### Twill Block component
+
+**/app/View/Components/Twill/Blocks/Sandbox/PricingPlan.php**
+
+```php
+<?php
+
+namespace App\View\Components\Twill\Blocks\Sandbox;
+
+use A17\Twill\Services\Forms\Columns;
+use A17\Twill\Services\Forms\Fields\Input;
+use A17\Twill\Services\Forms\Form;
+use A17\Twill\Services\Forms\Fields\Wysiwyg;
+use A17\Twill\Services\Forms\InlineRepeater;
+
+class PricingTable extends Base
+{
+    public function getForm(): Form
+    {
+        return Form::make([
+            Input::make()
+                ->name('title')
+                ->label(__('Title'))
+                ->translatable(),
+
+            InlineRepeater::make()
+                ->name('pricing')
+                ->label(__('Plan'))
+                ->triggerText(__('Add a Plan'))
+                ->fields([
+                    Columns::make()
+                        ->left([
+                            Input::make()
+                                ->name('name')
+                                ->label(__('Name'))
+                                ->translatable()
+                                ->required(),
+                        ])
+                        ->right([
+                            Input::make()
+                                ->name('price')
+                                ->label(__('Price'))
+                                ->required()
+                                ->type('number')
+                                ->min(0),
+                        ]),
+
+                    Wysiwyg::make()
+                        ->name('description')
+                        ->label(__('Description'))
+                        ->type(self::fieldWysiwygTypeDefault())
+                        ->toolbarOptions(self::fieldWysiwygToolbarOptionsDefault())
+                        ->allowSource()
+                        ->translatable(),
+
+                ])
+        ]);
+    }
+
+    public static function getBlockTitle(): string
+    {
+        return __('Pricing Table');
+    }
+
+    public static function getBlockIcon(): string
+    {
+        return 'b-checklist';
+    }
+}
+```
+
+### **Preview of the Twill BlockEditor**
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703183126047/27abf648-0515-4533-8114-292be04bcc62.png align="center")
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703183149614/bfb9c9aa-5ba0-408d-a04e-d736c567662a.png align="center")
+
+### Vue 3 Block component
+
+**/resources/views/Components/Theme/Block/Sandbox/PricingPlan.vue**
+
+```javascript
+<script setup lang="ts">
+defineOptions({
+  name: 'BlockSandboxPricingTable',
+})
+
+interface Props {
+  block: Model.Block & PropsBlock
+}
+
+type PropsBlock = {
+  content: {
+    title?: string | null
+    subtitle?: string | null
+    content?: string | null
+  }
+  childs: PropsChildBlock[]
+}
+
+type PropsChildBlock = {
+  content: {
+    name?: string | null
+    price?: string | null
+    description?: string | null
+  }
+}
+
+defineProps<Props>()
+
+/**
+ * Tailwind dynamic classes.
+ * opacity-60
+ * opacity-80
+ * opacity-100
+ */
+</script>
+
+<template>
+  <div
+    v-if="block?.childs && Array.isArray(block.childs) && block.childs.length > 0"
+    class="w-full bg-blue pt-8"
+  >
+    <h1
+      v-if="block.content?.title"
+      v-html="block.content.title"
+      class="text-center text-4xl font-semibold text-gray-900 mb-8"
+    ></h1>
+
+    <div class="flex justify-center">
+      <template
+        v-for="(child, index) in block.childs"
+        :key="index"
+      >
+        <div
+          v-if="child.content?.name && child.content?.price"
+          class="w-full px-3"
+        >
+          <div
+            class="bg-teal-500 rounded-lg"
+            :class="`opacity-${(3 + index) * 20}`"
+          >
+            <div class="py-3 block text-3xl text-center font-semibold">
+              {{ child.content.name }}
+            </div>
+
+            <h2 class="mb-6 font-bold text-center">
+              <span class="text-4xl">${{ child.content.price }}</span>
+              <span class="text-gray-600"> / month </span>
+            </h2>
+
+            <p
+              v-if="child.content?.description"
+              v-html="child.content.description"
+              class="border-t border-stroke py-6 mx-6"
+            ></p>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>
+```
+
+### **Preview of the Inertia Page**
+
+![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703183358672/924e448a-1a10-4164-b5cf-6535cbbe72a0.png align="center")
+
 ---
 
 > We'll do our best to provide source code of the serie on [GitHub](https://github.com/Codivores/tutorial-laravel-twill-inertia-vue3-vite-tailwind)
