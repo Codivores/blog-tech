@@ -1,10 +1,10 @@
 ---
-title: "Twill / Inertia / Vue 3 block party"
-seoTitle: "Laravel Twill Inertia - Block party"
+title: "Bridging Twill and Vue: crafting dynamic content Blocks"
+seoTitle: "Laravel Twill Inertia - Crafting dynamic content Twill / Vue Blocks"
 seoDescription: "Deep dive into Twill, a CMS package for Laravel, create and publish dynamic content with reusable Twill and Vue blocks"
 datePublished: Sun Dec 17 2023 23:00:00 GMT+0000 (Coordinated Universal Time)
 cuid: clqdupnf4000008ky9jbtax1x
-slug: ltivt-10-laravel-twill-inertia-vue3-block-party
+slug: ltivt-10-laravel-twill-inertia-vue3-bridging-twill-vue-blocks
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1703069681973/7b381238-77b3-4f70-8a61-348af89a4caa.avif
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1703015664580/5435a9ac-8cc2-4c0d-b80d-6798191420af.avif
 tags: laravel, php, vuejs, inertiajs, twill
