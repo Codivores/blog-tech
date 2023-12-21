@@ -13,21 +13,17 @@ tags: laravel, php, vuejs, inertiajs, twill
 
 Now that we can create pages, it's time to leverage Twill's powerful content management features and construct reusable blocks.
 
-In this article, we will focus on creating a basic `Title` Twill Block and explore ways to enhance Developer Experience for subsequent blocks.
+In this article, we will focus on creating a basic `Title` Twill Block (with a translatable Twill Text Input in a `Common` namespace, using the Twill 3 formbuilder) and explore ways to enhance Developer Experience for subsequent blocks.
 
-## TLDR
+To achieve this, here are the different steps:
 
-To start simply, we will create a `Title` Block in the `Common` namespace with a simple translatable Twill Text Input.
-
-To achieve this, here are the different steps
-
-1. Create a Twill Block component and add it the the block editor of our `PageContent` Module
+1. Create a Twill Block component and add it to the BlockEditor of our `PageContent` Module
     
-2. Improve our Twill Models to compute blocks data and make them ready to use in our Inertia Vue Page
+2. Improve our Twill Models to compute blocks data
     
 3. Create a Vue 3 component for the Block
     
-4. Use it in our `PageContent` page
+4. Use it in our `PageContent` Inertia Vue page
     
 
 ## Twill Block creation
@@ -88,11 +84,11 @@ class Title extends TwillBlockComponent
 }
 ```
 
-We can see that the Block component purpose is to define the form to manage the content and how render it.
+We can see that the Block component main purpose is to define the form to manage its content and how render it.
 
 As we
 
-* won't use Blade engine for rendering, but we need to implement the `render()`method
+* won't use Blade engine for rendering, but we need to implement the `render()` method and return a `View`
     
 * want to have just a translatable Text Input
     
@@ -178,10 +174,10 @@ class BlockComponent extends TwillBlockComponent
 
 * Defines default `render()` and `getForm()` methods, preventing to implement it in every block
     
-* Overrides the `getBlockGroup()` helper, that is `app-` by default for every block and does not represent our code organization
+* Overrides the `getBlockGroup()` helper, that returns `app-` by default for every block and does not represent our code organization
     
 
-> We will see later, but this class will allow us, for example, to globally define the default editor and toolbar of WYSIWYG fields.
+> We will see later, but this class will allow us, for example, to globally define the default editor and toolbar of WYSIWYG fields, ...
 
 ### **Creating a Base Block class for our namespace**
 
@@ -203,7 +199,7 @@ class Base extends BlockComponent
 }
 ```
 
-Its purpose is essentially to define the group for all blocks in this namespace.
+Its purpose is essentially to define the group for all blocks in the namespace.
 
 ### And now our Block
 
@@ -248,9 +244,9 @@ class Title extends Base
 
 **What it does**
 
-* Extends our Base Block in our Common namespace
+* Extends our Base Block in our `Common` namespace
     
-* Provides a dynamic title with `getBlockTitleField()` using the `title` field. It's not mandatory but can be helpful when there are many blocks in the BlockEditor
+* Provides a dynamic title with `getBlockTitleField()` using the `title` field. It's not mandatory but can be helpful when there are many blocks in the BlockEditor (you can also remove the Block title prefix overriding `shouldHidePrefix()` method)
     
     ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703068780933/aef3469a-70a0-4769-bed4-4e1ed6975b4e.png align="center")
     
@@ -259,11 +255,11 @@ class Title extends Base
     ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703069108870/3902bf64-4831-4193-9009-21aa726c96d6.png align="left")
     
 
-### **Filtering allowed blocks on our module**
+### **Filtering allowed blocks on our module** \[optional\]
 
-In the BlockEditor field, it is possible to define the list of allowed blocks. Depending on the page templates and the number of blocks, it is a good practice to define exactly the list of available blocks.
+In the BlockEditor field, it is possible to define the list of allowed blocks. Depending on the page templates and the number of blocks in your project, it could be a good practice to define exactly the list of available blocks for each Module.
 
-Taking the controller of our `PageContent` Module, in the `getForm()` method, we will call the `blocks` method, giving it the list of blocks.
+Taking the controller of our `PageContent` Module, in the `getForm()` method, we will call the `blocks()` method, giving it the list of the blocks.
 
 **/app/Http/Controllers/Twill/PageContentController.php**
 
@@ -290,17 +286,17 @@ Taking the controller of our `PageContent` Module, in the `getForm()` method, we
 
 ## Let's take a look on the frontend side
 
-A Twill Block is a Laravel Eloquent Model and therefore contains a lot of information (attributes, relations, ...) that are not necessary.
+A Twill Block component is a Laravel Eloquent Model and therefore contains a lot of information (attributes, relations, ...) that are not necessary.
 
 Here is what it looks like if we inject the block as is:
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703069583342/3205f11b-7f9f-46d5-886c-a28a82fc7472.png align="center")
 
-### Enhance our Module Models to prepare the Blocs data let's create a Base Model with some methods
+### Let's create a Base Model with some methods to prepare the Blocks data
 
 We will create a Model that extends Twill's Model in which we will add a method to prepare Block data.
 
-> For now, we will just handle the blocks, but this class will also allow us to manage Model medias, files, slug, and medias, browsers, ... in blocks
+> For now, we will just handle the blocks, but this class will also allow us to manage Model medias, files, slug, and also medias, browsers, ... in blocks
 
 ```php
 <?php
@@ -381,7 +377,7 @@ class Model extends TwillModel
 }
 ```
 
-### **Adaptations of the Model of our module**
+### **Adaptations of the Model of our Module**
 
 It must now:
 
@@ -409,7 +405,7 @@ class PageContent extends Model implements Sortable
 
 ### **Adapt our existing Module controllers**
 
-On both Back and Frontend controllers, we will call the `computeBlocks()` method on our `item`.
+On both Back and Frontend controllers for our Module, we will call the `computeBlocks()` method on the `$item`.
 
 **/app/Http/Controllers/Admin/PageContentController.php**
 
@@ -479,15 +475,15 @@ Here is what we have now on the Vue side:
 
 ![](https://cdn.hashnode.com/res/hashnode/image/upload/v1703070694430/6ae5aa15-d9b0-4374-9bc2-547a0060eb35.png align="center")
 
-> We could clean up more by removing `editor_name` and `position`, but we decided to keep them because it happens to us to have several BlockEditor fields on the same Module and also to have display behaviors depending on the position (for example, for our `Title` block, we could put an `h1` if position is 1 and an `h2` otherwise).
+> We could clean up more by removing `editor_name` and `position`, but we decided to keep them because it happens to us to have several BlockEditor fields on a same Module, and also to handle display behaviors depending on the position (for example, for our `Title` block, we could define an `h1` if position is 1 and an `h2` otherwise).
 
 ## Vue Block creation
 
-Now we have an array of blocks that we can process in ou Inertia Page as a Vue Single-File Component (SFC)
+Now we have a clean and orderer array of blocks that we can process in ou Inertia Page as a Vue Single-File Component (SFC).
 
 ### Block component
 
-We will create a Vue component equivalent of the Twill Block.
+We will create a Vue component that corresponds to the Twill Block.
 
 **/resources/views/Components/Theme/Block/Common/Title.vue**
 
@@ -519,9 +515,9 @@ defineProps<Props>()
 </template>
 ```
 
-### TypeScript types enrichment
+### TypeScript types enhancement \[optional\]
 
-We create a `Block` type and add `blocks` to our `Page` type:
+We can create a `Block` type, and add `blocks` to our `Page` type:
 
 **/resources/js/types/models.d.ts**
 
@@ -541,7 +537,7 @@ declare namespace Model {
 }
 ```
 
-### Adding a `@Block` alias
+### Adding a `@Block` alias \[optional\]
 
 **/vite.config.js**
 
@@ -582,9 +578,9 @@ export default defineConfig({
 
 ## Integration into our Inertia Vue Page
 
-* We will load our blocks asynchronously, avoiding unnecessary component loading.
+* We will load our blocks asynchronously, avoiding unnecessary component loading using [Vue 3 `defineAsyncComponent()`](https://vuejs.org/guide/components/async)
     
-* In the template, if our item contains blocks, we will loop through the list and load the appropriate Vue component based on its type value.
+* In the template, if our `item` has blocks, we will loop through the list and load the appropriate Vue component based on its type value (`v-if="block.type == 'my-block-name'")`
     
 
 **/resources/views/Pages/Page/Content.vue**
