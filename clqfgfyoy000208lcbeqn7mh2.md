@@ -2,7 +2,7 @@
 title: "Twill / Vue 3 block party"
 seoTitle: "Laravel Twill Inertia - Twill / Vue Block party"
 seoDescription: "Deep dive into Twill, a CMS package for Laravel, create reusable Twill and Vue blocks for your project"
-datePublished: Thu Dec 21 2023 17:06:38 GMT+0000 (Coordinated Universal Time)
+datePublished: Thu Dec 21 2023 23:00:00 GMT+0000 (Coordinated Universal Time)
 cuid: clqfgfyoy000208lcbeqn7mh2
 slug: ltivt-11-laravel-twill-vue3-block-party
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1703150897793/e52f51db-a9bd-46e5-9aa5-0e025be3a683.avif
