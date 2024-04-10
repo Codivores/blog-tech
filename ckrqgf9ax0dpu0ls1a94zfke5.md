@@ -162,7 +162,7 @@ class IndexController extends Controller
 
 And now on our Page, we register our `darkMode` prop (as a Boolean) in our component props and use it in the first `div` of the template to alternatively set its class to `bg-gray-600` or `bg-white`.
 
-**/resources/js/Pages/Index.vue**
+**/resources/views/Pages/Index.vue**
 
 ```xml
 <script setup lang="ts">
