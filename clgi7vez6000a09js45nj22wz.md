@@ -163,7 +163,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-If you want to customize the title in the navigation, you can chain it with the call of `title()` method (don’t forget to add \`use Illuminate\\Support\\Str;\` if you use the example below):
+If you want to customize the title in the navigation, you can chain it with the call of `title()` method (don’t forget to add `use Illuminate\Support\Str;` if you use the example below):
 
 ```php
     public function boot(): void
